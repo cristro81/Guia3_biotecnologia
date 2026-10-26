@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 6: Evidencias de Aprendizaje</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ESTILOS GLOBALES */
+        :root { --sena-green: #39A900; --sena-blue: #00324D; --sena-orange: #FF6C00; --bg-body: #F4F6F9; --bg-card: #FFFFFF; --text-gray: #59667a; --shadow: 0 4px 20px rgba(0,0,0,0.05); --radius: 12px; --menu-width: 280px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--sena-blue); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
+        
+        /* FONDO / MARCA DE AGUA */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/aula tecnologica.png");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.65;
+            z-index: -1;
+        }
+
+        /* HEADER */
+        header { background-color: var(--bg-card); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 100; }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .back-btn { text-decoration: none; color: var(--sena-blue); font-weight: bold; display: flex; align-items: center; gap: 10px; transition: color 0.3s; }
+        .back-btn:hover { color: var(--sena-orange); }
+
+        /* LAYOUT */
+        .main-layout { display: flex; flex: 1; max-width: 1400px; margin: 2rem auto; gap: 2rem; width: 100%; padding: 0 20px; }
+        .sidebar { width: var(--menu-width); background: rgba(255, 255, 255, 0.95); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; height: fit-content; position: sticky; top: 2rem; }
+        .sidebar h3 { font-family: 'Montserrat'; color: var(--sena-green); margin-bottom: 1.5rem; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; transition: all 0.3s; color: var(--text-gray); font-weight: 500; }
+        .menu-item.active { background: var(--sena-green); color: white; box-shadow: 0 4px 10px rgba(57, 169, 0, 0.3); }
+
+        /* CONTENIDO */
+        .content-area { flex: 1; background: rgba(255, 255, 255, 0.95); border-radius: var(--radius); box-shadow: var(--shadow); padding: 2.5rem; min-height: 600px; }
+        .section-header h2 { font-family: 'Montserrat'; color: var(--sena-blue); font-size: 1.8rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+        /* TABLA DE EVIDENCIAS */
+        .table-container { overflow-x: auto; margin-top: 2rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.05); }
+        .evidence-table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        
+        .evidence-table th { background-color: var(--sena-blue); color: white; padding: 15px; text-align: left; font-family: 'Montserrat'; border: 1px solid #001f33; }
+        .evidence-table td { padding: 15px; border: 1px solid #ddd; vertical-align: top; background: white; font-size: 0.95rem; }
+        .evidence-table tr:nth-child(even) td { background-color: #f8f9fa; }
+        .evidence-table tr:hover td { background-color: #e3f2fd; }
+        
+        .evidence-table ul { padding-left: 20px; margin: 0; }
+        .evidence-table li { margin-bottom: 5px; }
+
+        /* CHECKBOX FINAL */
+        .confirmation-box { margin-top: 3rem; padding: 20px; background: #e8f5e9; border: 2px dashed var(--sena-green); border-radius: var(--radius); text-align: center; }
+        .btn-primary { background: var(--sena-orange); color: white; border: none; padding: 12px 30px; border-radius: 30px; cursor: pointer; font-weight: bold; transition: background 0.3s; font-size: 1rem; margin-top: 15px; }
+        .btn-primary:hover { background: #e65100; }
+
+        @media (max-width: 768px) {
+            .main-layout { flex-direction: column; } 
+            .sidebar { width: 100%; position: static; } 
+            .top-images-container { flex-direction: column; align-items: center; }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/SENA_T.png" alt="SENA" style="height: 50px;" onerror="this.src='https://placehold.co/100x50/FFFFFF/39A900?text=SENA'">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Centro de Comando</a>
+        </div>
+        <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/TECNO_V.jpeg" alt="Tecnoacademia" style="height: 50px;" onerror="this.src='https://placehold.co/150x50/FFFFFF/00324D?text=Tecnoacademia'">
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <h3><i class="fas fa-clipboard-check"></i> Menú</h3>
+            <div class="menu-item active"><i class="fas fa-table"></i> Matriz de Evaluación</div>
+        </aside>
+
+        <main class="content-area">
+            
+            <!-- CONTENEDOR DE IMÁGENES Y TÍTULO -->
+            <div class="top-images-container" style="display: flex; gap: 25px; align-items: flex-start; justify-content: space-between; margin-bottom: 2rem;">
+                
+                <!-- Imagen Izquierda -->
+                <div style="flex-shrink: 0;">
+                    <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/TECNOBOT CABEZA.jpeg" alt="Tecnobot Cabeza" style="width: 140px; border-radius: 12px; box-shadow: var(--shadow);" onerror="this.src='https://placehold.co/140x140/F4F6F9/00324D?text=Tecnobot'">
+                </div>
+
+                <!-- Centro: Textos -->
+                <div class="section-header" style="flex: 1; text-align: center;">
+                    <h2><i class="fas fa-tasks"></i> Módulo 6: Evidencias de Aprendizaje</h2>
+                    <p style="color: var(--text-gray); font-size: 1.05rem; margin-top: 15px;">
+                        Revisa cuidadosamente los criterios con los que serás evaluado en este curso. Conocer tus evidencias te ayudará a alcanzar la excelencia en tu formación biotecnológica.
+                    </p>
+                </div>
+
+                <!-- Imágenes Derecha (Apiladas) -->
+                <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 15px;">
+                    <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/Dr. Patarroyo.png" alt="Dr. Patarroyo" style="width: 130px; border-radius: 12px; box-shadow: var(--shadow);" onerror="this.src='https://placehold.co/130x160/F4F6F9/00324D?text=Dr.+Patarroyo'">
+                    <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/Dra. Rosalind.png" alt="Dra. Rosalind" style="width: 130px; border-radius: 12px; box-shadow: var(--shadow);" onerror="this.src='https://placehold.co/130x160/F4F6F9/39A900?text=Dra.+Rosalind'">
+                </div>
+
+            </div>
+
+            <!-- TABLA DE EVIDENCIAS -->
+            <div class="table-container">
+                <table class="evidence-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;"><i class="fas fa-chalkboard-teacher"></i> Actividad de Aprendizaje</th>
+                            <th style="width: 30%;"><i class="fas fa-file-alt"></i> Evidencias de Aprendizaje</th>
+                            <th style="width: 25%;"><i class="fas fa-check-square"></i> Criterios de Evaluación</th>
+                            <th style="width: 20%;"><i class="fas fa-tools"></i> Técnicas e Instrumentos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <!-- FILA 1 -->
+                        <tr>
+                            <td><strong>Identificar las diferentes soluciones ingenieriles para sistemas biológicos según las necesidades de la industria.</strong></td>
+                            <td>
+                                <ul>
+                                    <li><strong>Evidencias de Desempeño:</strong><br>Rúbrica para evaluar el desempeño en la ejecución del proyecto seleccionado.</li>
+                                    <li style="margin-top: 10px;"><strong>Evidencias de Producto:</strong>
+                                        <ul>
+                                            <li>Informe del proyecto.</li>
+                                            <li>Infografía.</li>
+                                        </ul>
+                                    </li>
+                                    <li style="margin-top: 5px;"><strong>Forma de entrega:</strong> Digital o Físico.</li>
+                                    <li><strong>Fecha de entrega:</strong> Según concertado con el facilitador.</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>Identifica soluciones ingenieriles para sistemas biológicos según las necesidades de la industria.</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li><strong>Técnica:</strong> Observación.</li>
+                                    <li><strong>Instrumento:</strong> Rúbrica.</li>
+                                </ul>
+                            </td>
+                        </tr>
+
+                        <!-- FILA 2 -->
+                        <tr>
+                            <td><strong>Elaborar productos biotecnológicos según la aplicación deseada.</strong></td>
+                            <td>
+                                <ul>
+                                    <li><strong>Evidencias de Producto:</strong><br>Informe técnico del producto biotecnológico obtenido.</li>
+                                    <li style="margin-top: 5px;"><strong>Forma de entrega:</strong> Digital o Físico.</li>
+                                    <li><strong>Fecha de entrega:</strong> Según concertado con el facilitador.</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>Elabora productos biotecnológicos según la aplicación deseada.</li>
+                                    <li>Elabora un informe técnico del producto biotecnológico obtenido.</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li><strong>Técnica:</strong> Observación.</li>
+                                    <li><strong>Instrumento:</strong> Rúbrica.</li>
+                                </ul>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="confirmation-box">
+                <i class="fas fa-check-double fa-3x" style="color:var(--sena-green); margin-bottom:10px;"></i>
+                <h3 style="color: var(--sena-blue); font-family: 'Montserrat';">Confirmación de Lectura</h3>
+                <p style="color: var(--text-gray); margin-top: 10px;">He leído y comprendido los criterios de evaluación y las evidencias requeridas para aprobar este curso.</p>
+                <button class="btn-primary" onclick="finishModule()">
+                    <i class="fas fa-unlock-alt"></i> Aceptar y Desbloquear Glosario
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function finishModule() {
+            const savedState = localStorage.getItem('vexIqState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                
+                // Marcar Módulo 6 completado
+                if (!state.completedModules.includes(6)) state.completedModules.push(6);
+                
+                // Desbloquear Módulo 7 (Glosario)
+                if (!state.unlockedModules.includes(7)) state.unlockedModules.push(7);
+                
+                localStorage.setItem('vexIqState', JSON.stringify(state));
+                alert("¡Evidencias Revisadas! Acceso al Glosario (Módulo 7) autorizado.");
+                window.location.href = 'index.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+</body>
+
+</html>

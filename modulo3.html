@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 3: ACTIVIDAD DE CONTEXTUALIZACIÓN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ESTILOS GLOBALES ESTANDARIZADOS */
+        :root { --sena-green: #39A900; --sena-blue: #00324D; --sena-orange: #FF6C00; --bg-body: #F4F6F9; --bg-card: #FFFFFF; --text-gray: #59667a; --shadow: 0 4px 20px rgba(0,0,0,0.05); --radius: 12px; --menu-width: 280px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--sena-blue); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; position: relative;}
+        
+        /* FONDO / MARCA DE AGUA */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/imagenes/Extraccion ADN.png");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15; /* Transparencia para que no interfiera con la lectura */
+            z-index: -1;
+        }
+
+        /* HEADER */
+        header { background-color: var(--bg-card); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 100; }
+        .back-btn { text-decoration: none; color: var(--sena-blue); font-weight: bold; display: flex; align-items: center; gap: 10px; transition: color 0.3s; }
+        .back-btn:hover { color: var(--sena-orange); }
+
+        /* LAYOUT */
+        .main-layout { display: flex; flex: 1; max-width: 1400px; margin: 2rem auto; gap: 2rem; width: 100%; padding: 0 20px; }
+        .sidebar { width: var(--menu-width); background: rgba(255, 255, 255, 0.95); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; height: fit-content; position: sticky; top: 2rem; }
+        .sidebar h3 { font-family: 'Montserrat'; color: var(--sena-green); margin-bottom: 1.5rem; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; transition: all 0.3s; color: var(--text-gray); font-weight: 500; position: relative; }
+        .menu-item:hover { background: #f0fdf4; color: var(--sena-green); }
+        .menu-item.active { background: var(--sena-green); color: white; box-shadow: 0 4px 10px rgba(57, 169, 0, 0.3); }
+        .menu-item.completed::after { content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; right: 15px; color: var(--sena-green); }
+        .menu-item.active.completed::after { color: white; }
+
+        /* CONTENIDO */
+        .content-area { flex: 1; background: rgba(255, 255, 255, 0.95); border-radius: var(--radius); box-shadow: var(--shadow); padding: 2.5rem; min-height: 600px; }
+        .activity-section { display: none; animation: fadeIn 0.5s ease; }
+        .activity-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .section-header h2 { font-family: 'Montserrat'; color: var(--sena-blue); font-size: 1.8rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        /* BOTONES Y FORMULARIOS */
+        .btn-primary { background: var(--sena-orange); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.3s; display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; }
+        .btn-primary:hover { background: #e65100; }
+        
+        /* AREA DE CARGA (UPLOAD) */
+        input[type="file"] { display: none; }
+        .upload-area { border: 2px dashed var(--sena-green); padding: 40px 20px; text-align: center; border-radius: var(--radius); background: #f9fbf9; margin-top: 30px; transition: all 0.3s; }
+        .upload-area:hover { background: #f0fdf4; border-color: #2e8b00; }
+        .upload-label { display: inline-flex; flex-direction: column; align-items: center; gap: 15px; cursor: pointer; color: var(--sena-green); font-weight: bold; width: 100%; }
+        .upload-icon { font-size: 3rem; color: var(--sena-green); }
+        .file-name { margin-top: 15px; font-size: 0.9rem; color: var(--sena-blue); font-weight: normal; }
+
+        /* CAJA DE PROBLEMA */
+        .problem-box { background: #ffffff; border-left: 5px solid var(--sena-orange); padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; position: relative; overflow: hidden;}
+        .problem-box::after { content: '\f071'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; right: -20px; bottom: -30px; font-size: 8rem; color: rgba(255, 108, 0, 0.05); }
+
+        /* AREA FINAL */
+        .finish-area { margin-top: 2rem; text-align: center; padding: 2rem; background: #e8f5e9; border: 2px dashed var(--sena-green); border-radius: var(--radius); display: none; }
+
+        @media (max-width: 768px) { .main-layout { flex-direction: column; } .sidebar { width: 100%; position: static; } }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-left">
+            <img src="imagenes/sena.png" style="height: 50px;">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Centro de Comando</a>
+        </div>
+        <img src="imagenes/tecnoacademia.jpeg" style="height: 50px;">
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <h3><i class="fas fa-list-ul"></i> Actividades</h3>
+            
+            <div id="menu-1" class="menu-item active" onclick="showSection(1)">
+                <i class="fas fa-search-location"></i> 1. Contextualización
+            </div>
+            
+            <div id="menu-final" class="finish-area" style="padding: 10px; margin-top: 20px; display: none;">
+                <p style="font-size:0.9rem; color:var(--sena-green); font-weight:bold;"><i class="fas fa-star" style="color: gold;"></i> ¡Módulo Completado!</p>
+                <button class="btn-primary" style="width:100%; justify-content:center; font-size:0.8rem; margin-top: 10px;" onclick="finishModule()">
+                    Avanzar Siguiente Nivel
+                </button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            
+            <section id="sec-1" class="activity-section active">
+                <div class="section-header">
+                    <h2>Módulo 3: ACTIVIDAD DE CONTEXTUALIZACIÓN</h2>
+                </div>
+
+                <div style="background: #e3f2fd; border-left: 4px solid var(--sena-blue); padding: 15px 20px; border-radius: 4px; margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between;">
+                    <p style="margin: 0;"><strong><i class="fas fa-clock"></i> Tiempo Estimado Total:</strong> 7 Horas</p>
+                </div>
+
+                <div style="display: flex; gap: 30px; margin-bottom: 30px; align-items: stretch; flex-wrap: wrap;">
+                    
+                    <!-- Imagen Izquierda -->
+                    <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                        <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/imagenes/Dr. Patarroyo.png" alt="Dr. Patarroyo" style="max-width: 180px; border-radius: 12px; box-shadow: var(--shadow);">
+                    </div>
+
+                    <!-- Texto Central -->
+                    <div style="flex: 1; min-width: 300px; text-align: justify;">
+                        <p style="margin-bottom: 15px; font-size: 1.05rem;">
+                            Con ayuda de tus compañeros encuentra la mejor solución al problema propuesto, sigue atentamente las instrucciones.
+                        </p>
+                        <p style="margin-bottom: 15px;">
+                            Cada día la investigación avanza de una forma acelerada de la mano con los nuevos desarrollos tecnológicos y la innovación, todo esto debido a la demanda de bienes y servicios que ayuden a suplir las necesidades del ser humano y las sociedades en general. Para comenzar a desarrollar nuestros proyectos de investigación, debes dar solución junto con tus compañeros al siguiente problema propuesto.
+                        </p>
+                        
+                        <div class="problem-box">
+                            <h3 style="color: var(--sena-orange); margin-bottom: 15px; font-family: 'Montserrat';"><i class="fas fa-exclamation-circle"></i> Caso de Estudio: Vereda El Reposo</h3>
+                            <p style="margin-bottom: 10px;">
+                                En la vereda El Reposo, ubicada a 50 Km de la cabecera municipal del municipio de San Benito, la comunidad ha presentado problemas de alergias y enfermedades estomacales debido a la falta de potabilización del agua. Según el médico del puesto de salud, se han presentado múltiples intoxicaciones y varias alergias tanto en niños como en personas adultas. Cada día la situación se complica más para esa comunidad.
+                            </p>
+                            <p>
+                                La vereda El Reposo cuenta con acueducto comunitario, el cual fue construido hace muchos años por la misma comunidad y por falta de presupuesto no se realizan los mantenimientos requeridos.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Imagen Derecha -->
+                    <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                        <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/imagenes/De la confusión a la solución.png" alt="De la confusión a la solución" style="max-width: 180px; border-radius: 12px; box-shadow: var(--shadow);">
+                    </div>
+                </div>
+
+                <div style="background: #fdfdfd; padding: 25px; border-radius: var(--radius); border: 1px solid #e0e0e0; box-shadow: 0 5px 15px rgba(0,0,0,0.02);">
+                    <h3 style="color: var(--sena-blue); margin-bottom: 15px; font-family: 'Montserrat';"><i class="fas fa-lightbulb"></i> Tu Misión como Investigador</h3>
+                    <p style="text-align: justify; margin-bottom: 20px;">
+                        Tú eres un investigador en temas de Biotecnología. Según tus conocimientos puedes proponer alternativas que ayuden a resolver esta situación. <strong>¿Cuál crees que puede llegar a ser la mejor solución para el problema que presenta esta comunidad?</strong> Junto a tus compañeros justifica tu respuesta, realiza un póster con los materiales que se te darán y construye una exposición de 3 minutos donde presentes tu solución delante del grupo.
+                    </p>
+
+                    <div class="upload-area" id="drop-zone">
+                        <label class="upload-label" for="poster-upload">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <span style="font-size: 1.2rem;">Sube la foto de tu póster aquí</span>
+                            <span style="color: var(--text-gray); font-weight: normal; font-size: 0.9rem;">Haz clic para buscar en tus archivos</span>
+                        </label>
+                        <input type="file" id="poster-upload" accept="image/*,.pdf" onchange="handleFileUpload(event)">
+                        <div id="file-info" class="file-name"></div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn-primary" id="btnSubmitEvidence" onclick="submitEvidence()" disabled style="opacity: 0.5; cursor: not-allowed;">
+                            <i class="fas fa-paper-plane"></i> Enviar Evidencia
+                        </button>
+                    </div>
+
+                    <div id="successMessage" style="margin-top: 20px; padding: 15px; background: #e8f5e9; color: var(--sena-green); font-weight: bold; border-radius: 8px; border: 1px solid #c8e6c9; display: none; text-align: center;">
+                        <i class="fas fa-check-circle fa-2x" style="margin-bottom: 10px;"></i><br>
+                        ¡Evidencia enviada exitosamente! Has completado la actividad de contextualización.
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // LÓGICA BASE OBLIGATORIA
+        let progress = [false]; // 1 sola actividad (Subir Póster)
+        let totalActivities = 1; 
+
+        function showSection(id) {
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('menu-' + id).classList.add('active');
+            document.querySelectorAll('.activity-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('sec-' + id).classList.add('active');
+        }
+
+        function markComplete(id) {
+            if (!progress[id-1]) {
+                progress[id-1] = true;
+                document.getElementById('menu-' + id).classList.add('completed');
+                checkAllComplete();
+            }
+        }
+
+        function checkAllComplete() {
+            if (progress.every(Boolean)) {
+                document.getElementById('menu-final').style.display = 'block';
+            }
+        }
+
+        function finishModule() {
+            const currentModule = 3; 
+            const nextModule = currentModule + 1;
+            
+            const savedState = localStorage.getItem('vexIqState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                if (!state.completedModules.includes(currentModule)) state.completedModules.push(currentModule);
+                if (!state.unlockedModules.includes(nextModule)) state.unlockedModules.push(nextModule);
+                localStorage.setItem('vexIqState', JSON.stringify(state));
+                alert("¡Módulo Finalizado! Progreso Guardado.");
+                window.location.href = 'index.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // --- FUNCIONES ESPECÍFICAS PARA LA ACTIVIDAD ---
+        
+        let fileSelected = false;
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            const fileInfo = document.getElementById('file-info');
+            const submitBtn = document.getElementById('btnSubmitEvidence');
+            const dropZone = document.getElementById('drop-zone');
+
+            if (file) {
+                fileSelected = true;
+                fileInfo.innerHTML = `<strong>Archivo seleccionado:</strong> ${file.name}`;
+                dropZone.style.borderColor = "var(--sena-green)";
+                dropZone.style.backgroundColor = "#e8f5e9";
+                
+                // Habilitar botón de envío
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = "1";
+                submitBtn.style.cursor = "pointer";
+            } else {
+                fileSelected = false;
+                fileInfo.innerHTML = "";
+                dropZone.style.borderColor = "var(--sena-green)";
+                dropZone.style.backgroundColor = "#f9fbf9";
+                
+                // Deshabilitar botón
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = "0.5";
+                submitBtn.style.cursor = "not-allowed";
+            }
+        }
+
+        function submitEvidence() {
+            if (!fileSelected) {
+                alert("Por favor, selecciona un archivo primero.");
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitEvidence');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Ocultar botón y mostrar éxito
+                btn.style.display = "none";
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('poster-upload').disabled = true;
+                
+                // Marcar actividad completada
+                markComplete(1);
+            }, 1000); // Simular tiempo de carga
+        }
+    </script>
+</body>
+</html>

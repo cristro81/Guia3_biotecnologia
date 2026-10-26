@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 0: Datos Institucionales</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Paleta Institucional */
+            --sena-green: #39A900;
+            --sena-blue: #00324D; 
+            --sena-orange: #FF6C00;
+            --bg-body: #F4F6F9;
+            --bg-card: #FFFFFF; 
+            --text-gray: #59667a;
+            --shadow: 0 4px 20px rgba(0,0,0,0.05); 
+            --radius: 12px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--sena-blue);
+            line-height: 1.6; 
+            position: relative;
+        }
+
+        /* FONDO / MARCA DE AGUA */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/imagenes/Bosque_noche.png");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            z-index: -1;
+        }
+        
+        /* HEADER */
+        header { background-color: var(--bg-card); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .back-btn { text-decoration: none; color: var(--sena-blue); font-weight: bold; display: flex; align-items: center; gap: 10px; transition: color 0.3s; }
+        .back-btn:hover { color: var(--sena-orange); }
+
+        /* CONTENIDO */
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 20px; }
+        .banner-container { width: 100%; margin-bottom: 2rem; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); background: white; text-align: center; }
+        .banner-container img { width: 100%; max-height: 300px; object-fit: cover; }
+        
+        .info-card { background: var(--bg-card); border-radius: var(--radius); padding: 3rem; box-shadow: var(--shadow); border-top: 5px solid var(--sena-green); }
+        .section-title { font-family: 'Montserrat'; color: var(--sena-green); font-size: 1.2rem; margin-bottom: 0.5rem; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+        .data-block { margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
+        .data-value { font-size: 1.1rem; color: var(--sena-blue); }
+        
+        ul.learning-outcomes { list-style: none; padding-left: 0; }
+        ul.learning-outcomes li { position: relative; padding-left: 25px; margin-bottom: 10px; }
+        ul.learning-outcomes li::before { content: "\f00c"; font-family: "Font Awesome 6 Free"; font-weight: 900; color: var(--sena-green); position: absolute; left: 0; top: 2px; }
+
+        /* BOTÓN DE FINALIZACIÓN */
+        .action-area { text-align: center; margin-top: 3rem; padding: 2rem; background: #e8f5e9; border-radius: var(--radius); border: 2px dashed var(--sena-green); }
+        .btn-complete { background: var(--sena-green); color: white; border: none; padding: 15px 40px; font-size: 1.1rem; border-radius: 30px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(57, 169, 0, 0.3); transition: transform 0.2s; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-complete:hover { transform: scale(1.05); background: #2e8b00; }
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="imagenes/sena.png" alt="Logo SENA" style="height: 50px; width: auto;">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Centro de Comando</a>
+        </div>
+        <img src="imagenes/tecnoacademia.jpeg" alt="Logo Tecnoacademia" style="height: 50px; width: auto;">
+    </header>
+
+    <div class="container">
+        
+        <div class="banner-container" style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 0 20px;">
+            <h1 style="font-family: 'Montserrat', sans-serif; color: var(--sena-blue); font-size: 2.5rem; width: 70%; text-align: center; margin: 0;">Datos Institucionales</h1>
+            <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/imagenes/Dra. Rosalind.png" alt="Dra. Rosalind" style="width: 25%; max-height: 250px; object-fit: contain;">
+        </div>
+
+        <div class="info-card">
+            <h1 style="font-family:'Montserrat'; text-align:center; color:var(--sena-blue); margin-bottom:2rem;">Ficha Técnica de Misión</h1>
+
+            <!-- DESCRIPCIÓN DEL PROGRAMA E IMAGEN -->
+            <div style="display: flex; align-items: center; gap: 30px; margin-bottom: 3rem; text-align: justify; line-height: 1.8; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 300px;">
+                    <p style="margin-bottom: 15px;">En esta etapa nos adentraremos en el mundo de la biotecnología, explorando sus principales áreas, herramientas y aplicaciones, y comprendiendo cómo contribuye al bienestar y a la calidad de vida.</p>
+                    <p style="margin-bottom: 15px;">Te invitamos a participar activamente, trabajar colaborativamente, profundizar en los contenidos y desarrollar las actividades propuestas. Según la dinámica del proceso, podrán incorporarse estrategias de gamificación que permitirán obtener insignias durante el curso.</p>
+                    <p style="margin-bottom: 15px;">Además, abordaremos los Objetivos de Desarrollo Sostenible (ODS) y el enfoque STEAM, integrándolos con actividades relacionadas con la cultura, la innovación y el emprendimiento.</p>
+                    <p><strong>¡Prepárate para aprender, crear y vivir una experiencia científica enriquecedora! 🚀</strong></p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/imagenes/TECNOBOT CABEZA.jpeg" alt="Tecnobot Cabeza" style="max-width: 250px; border-radius: var(--radius); box-shadow: var(--shadow);">
+                </div>
+            </div>
+
+            <div class="data-block">
+                <div class="section-title"><i class="fas fa-certificate"></i> Denominación del Programa</div>
+                <div class="data-value" style="font-weight:bold;">APLICACIONES Y DESARROLLO DE PROCESOS BIOTECNOLÓGICOS</div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div class="data-block">
+                    <div class="section-title"><i class="fas fa-barcode"></i> Código</div>
+                    <div class="data-value">22210045</div>
+                </div>
+                <div class="data-block">
+                    <div class="section-title"><i class="fas fa-clock"></i> Duración</div>
+                    <div class="data-value">48 Horas</div>
+                </div>
+            </div>
+
+            <div class="data-block">
+                <div class="section-title"><i class="fas fa-tools"></i> Competencia</div>
+                <div class="data-value">VALORAR MUESTRAS DE ACUERDO CON BUENAS PRÁCTICAS DE LABORATORIO Y TÉCNICA DE ANÁLISIS QUÍMICO INSTRUMENTAL.</div>
+            </div>
+
+            <div class="data-block">
+                <div class="section-title"><i class="fas fa-bullseye"></i> Resultados de Aprendizaje (RAP)</div>
+                <ul class="learning-outcomes">
+                    <li>Desarrollar proyectos utilizando conceptos biotecnológicos orientados a la solución de una problemática de acuerdo con estándares.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="action-area">
+            <h3 style="color:var(--sena-green); margin-bottom:1rem;">¿Información Recibida?</h3>
+            <p style="margin-bottom:1.5rem; color:var(--text-gray);">Confirma que has entendido los parámetros de la misión para desbloquear el siguiente nivel.</p>
+            <button class="btn-complete" onclick="finishModule()">
+                <i class="fas fa-check-circle"></i> Entendido, Misión Cumplida
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        function finishModule() {
+            // LÓGICA DE GAMIFICACIÓN CENTRALIZADA
+            const savedState = localStorage.getItem('vexIqState');
+            
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                
+                // 1. Marcar Módulo 0 como Completado
+                if (!state.completedModules.includes(0)) {
+                   state.completedModules.push(0);
+                }
+
+                // 2. Desbloquear Módulo 1 (Seguridad) automáticamente
+                if (!state.unlockedModules.includes(1)) {
+                   state.unlockedModules.push(1);
+                }
+
+                // 3. Guardar estado
+                localStorage.setItem('vexIqState', JSON.stringify(state));
+                
+                alert("¡Datos Registrados! Nivel 1 (Seguridad) Desbloqueado.");
+                window.location.href = 'index.html';
+            } else {
+                alert("No hay sesión activa. Por favor ingresa desde el inicio.");
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+</body>
+
+</html>

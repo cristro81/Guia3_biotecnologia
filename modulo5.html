@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 5: ACTIVIDADES DE TRANSFERENCIA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ESTILOS GLOBALES ESTANDARIZADOS */
+        :root { --sena-green: #39A900; --sena-blue: #00324D; --sena-orange: #FF6C00; --bg-body: #F4F6F9; --bg-card: #FFFFFF; --text-gray: #59667a; --shadow: 0 4px 20px rgba(0,0,0,0.05); --radius: 12px; --menu-width: 280px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--sena-blue); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; position: relative;}
+        
+        /* FONDO / MARCA DE AGUA */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/Fondo_laboratorio.png");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.65; /* No muy transparente */
+            z-index: -1;
+        }
+
+        /* HEADER */
+        header { background-color: var(--bg-card); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 100; position: sticky; top: 0;}
+        .back-btn { text-decoration: none; color: var(--sena-blue); font-weight: bold; display: flex; align-items: center; gap: 10px; transition: color 0.3s; }
+        .back-btn:hover { color: var(--sena-orange); }
+
+        /* LAYOUT */
+        .main-layout { display: flex; flex: 1; max-width: 1400px; margin: 2rem auto; gap: 2rem; width: 100%; padding: 0 20px; }
+        .sidebar { width: var(--menu-width); background: rgba(255, 255, 255, 0.95); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; height: fit-content; position: sticky; top: 6rem; }
+        .sidebar h3 { font-family: 'Montserrat'; color: var(--sena-green); margin-bottom: 1.5rem; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; transition: all 0.3s; color: var(--text-gray); font-weight: 500; position: relative; }
+        .menu-item:hover { background: #f0fdf4; color: var(--sena-green); }
+        .menu-item.active { background: var(--sena-green); color: white; box-shadow: 0 4px 10px rgba(57, 169, 0, 0.3); }
+        .menu-item.completed::after { content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; right: 15px; color: var(--sena-green); }
+        .menu-item.active.completed::after { color: white; }
+
+        /* CONTENIDO */
+        .content-area { flex: 1; background: rgba(255, 255, 255, 0.95); border-radius: var(--radius); box-shadow: var(--shadow); padding: 2.5rem; min-height: 600px; }
+        .activity-section { display: none; animation: fadeIn 0.5s ease; }
+        .activity-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .section-header h2 { font-family: 'Montserrat'; color: var(--sena-blue); font-size: 1.8rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        /* BOTONES Y FORMULARIOS */
+        .btn-primary { background: var(--sena-orange); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.3s; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 1rem;}
+        .btn-primary:hover { background: #e65100; }
+        .btn-blue { background: var(--sena-blue); }
+        .btn-blue:hover { background: #001f33; }
+        .btn-green { background: var(--sena-green); }
+        .btn-green:hover { background: #2e8b00; }
+        
+        /* AREA DE CARGA (UPLOAD) */
+        input[type="file"] { display: none; }
+        .upload-area { border: 2px dashed var(--sena-green); padding: 30px 20px; text-align: center; border-radius: var(--radius); background: #f9fbf9; margin-top: 20px; transition: all 0.3s; }
+        .upload-area:hover { background: #f0fdf4; border-color: #2e8b00; }
+        .upload-label { display: inline-flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; color: var(--sena-green); font-weight: bold; width: 100%; }
+        .upload-icon { font-size: 2.5rem; color: var(--sena-green); }
+        .file-name { margin-top: 10px; font-size: 0.9rem; color: var(--sena-blue); font-weight: normal; }
+
+        /* CAJAS DE INFORMACIÓN */
+        .info-box { background: #e3f2fd; border-left: 4px solid var(--sena-blue); padding: 15px 20px; border-radius: 4px; margin-bottom: 25px; }
+        .alert-box { background: #fff3e0; border-left: 5px solid var(--sena-orange); padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .success-box { background: #e8f5e9; border: 1px solid var(--sena-green); padding: 25px; border-radius: 8px; margin-top: 20px; text-align: center; display: none; }
+
+        /* RECOMPENSA */
+        .reward-box { margin-top: 20px; display: flex; align-items: center; gap: 15px; background: #fce4ec; padding: 15px; border-radius: 8px; border: 1px solid #e91e63; justify-content: center;}
+        .badge-img { width: 90px; height: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+
+        /* TIPS INFOGRAFIA */
+        .tips-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px; }
+        .tip-card { background: white; border: 1px solid #eee; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); display: flex; align-items: flex-start; gap: 15px; transition: transform 0.3s; }
+        .tip-card:hover { transform: translateY(-5px); border-color: var(--sena-blue); }
+        .tip-icon { font-size: 1.5rem; color: var(--sena-orange); }
+
+        /* INTERFAZ IA SIMULADA */
+        .ai-chat-interface { border: 1px solid #ddd; border-radius: 8px; overflow: hidden; margin-top: 20px; }
+        .ai-chat-header { background: #f1f3f4; padding: 10px 15px; font-weight: bold; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #ddd; }
+        .ai-chat-body { padding: 20px; background: white; min-height: 150px; }
+        .chat-bubble { padding: 12px 15px; border-radius: 18px; margin-bottom: 15px; max-width: 80%; line-height: 1.4; }
+        .chat-user { background: #e3f2fd; color: #0d47a1; margin-left: auto; border-bottom-right-radius: 4px; }
+        .chat-ai { background: #f5f5f5; color: #333; margin-right: auto; border-bottom-left-radius: 4px; }
+
+        /* AREA FINAL */
+        .finish-area { margin-top: 2rem; text-align: center; padding: 2rem; background: #e8f5e9; border: 2px dashed var(--sena-green); border-radius: var(--radius); display: none; }
+
+        @media (max-width: 768px) { .main-layout { flex-direction: column; } .sidebar { width: 100%; position: static; } }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-left">
+            <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/SENA_T.png" style="height: 50px;" onerror="this.src='https://placehold.co/100x50/FFFFFF/39A900?text=SENA'">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Centro de Comando</a>
+        </div>
+        <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/TECNO_V.jpeg" style="height: 50px;" onerror="this.src='https://placehold.co/150x50/FFFFFF/00324D?text=Tecnoacademia'">
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <h3><i class="fas fa-list-ul"></i> Actividades</h3>
+            
+            <div id="menu-1" class="menu-item active" onclick="showSection(1)">
+                <i class="fas fa-share-nodes"></i> 1. Transferencia
+            </div>
+            
+            <div id="menu-final" class="finish-area" style="padding: 10px; margin-top: 20px; display: none;">
+                <p style="font-size:0.9rem; color:var(--sena-green); font-weight:bold;"><i class="fas fa-star" style="color: gold;"></i> ¡Módulo Completado!</p>
+                <button class="btn-primary" style="width:100%; justify-content:center; font-size:0.8rem; margin-top: 10px;" onclick="finishModule()">
+                    Avanzar Siguiente Nivel
+                </button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            
+            <!-- SECCIÓN 1: TRANSFERENCIA -->
+            <section id="sec-1" class="activity-section active">
+                <div class="section-header">
+                    <h2>Módulo 5: ACTIVIDADES DE TRANSFERENCIA</h2>
+                </div>
+
+                <div class="info-box" style="display: flex; align-items: center; justify-content: space-between;">
+                    <p style="margin: 0;"><strong><i class="fas fa-clock"></i> Tiempo Estimado Total:</strong> 8 horas presenciales</p>
+                </div>
+
+                <div style="display: flex; gap: 30px; margin-bottom: 30px; align-items: stretch; flex-wrap: wrap;">
+                    
+                    <!-- Texto Central -->
+                    <div style="flex: 1; min-width: 300px; text-align: justify;">
+                        <p style="margin-bottom: 15px; font-size: 1.05rem;">
+                            Ha llegado el momento de consolidar tus hallazgos. Usando el anexo <strong>G3_Anexo 3</strong> elabora una <strong>infografía</strong> usando las IAs Gemini o ChatGPT de acuerdo con las indicaciones de tu facilitador, utilizando el informe del proyecto que elaboraste con tus compañeros de grupo.
+                        </p>
+                        
+                        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid var(--sena-green);">
+                            <h4 style="color: var(--sena-green); margin-bottom: 10px;"><i class="fas fa-list-check"></i> Estructura requerida de la Infografía:</h4>
+                            <ul style="padding-left: 20px; color: var(--sena-blue);">
+                                <li>Portada</li>
+                                <li>Introducción</li>
+                                <li>Objetivo</li>
+                                <li>Resultados y análisis</li>
+                                <li>Conclusión</li>
+                                <li>Referencias bibliográficas</li>
+                            </ul>
+                        </div>
+                        
+                        <p style="margin-bottom: 15px; font-weight: bold; color: var(--sena-orange);">
+                            Finalmente, socializa la infografía con tus compañeros Makers.
+                        </p>
+
+                        <div class="alert-box">
+                            <h4 style="color: var(--sena-orange); margin-bottom: 10px;"><i class="fas fa-shield-alt"></i> ¡Apreciado MAKER!</h4>
+                            <p style="margin-bottom: 10px;">Recuerda aplicar el protocolo de limpieza y desinfección establecido en el Manual de Bioseguridad de la Tecnoacademia, el cual será socializado por tu facilitador, al igual que cumplir el protocolo de bioseguridad contenido en los anexos de esta guía, así aportarás al desarrollo seguro de las formaciones.</p>
+                            <a href="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/documentos/MANUAL DE BIOSEGURIDAD LABORATORIOS TALLERES TECNOACADEMIA MANIZALES V2.0 (1).pdf" target="_blank" class="btn-primary" style="font-size: 0.85rem; padding: 8px 15px;">
+                                <i class="fas fa-file-pdf"></i> Manual de Bioseguridad
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Imágenes Derecha -->
+                    <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; align-items: center; justify-content: center;">
+                        <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/Dani Pasteur.png" alt="Dani Pasteur" style="width: 150px; border-radius: 12px; box-shadow: var(--shadow);" onerror="this.src='https://placehold.co/150x150/F4F6F9/00324D?text=Dani+Pasteur'">
+                        <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/CellEste.png" alt="CellEste" style="width: 150px; border-radius: 12px; box-shadow: var(--shadow);" onerror="this.src='https://placehold.co/150x150/F4F6F9/39A900?text=CellEste'">
+                    </div>
+                </div>
+
+                <div style="background: white; padding: 25px; border-radius: var(--radius); border: 1px solid #e0e0e0; box-shadow: 0 5px 15px rgba(0,0,0,0.02); margin-bottom: 25px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                        <h3 style="color: var(--sena-blue);"><i class="fas fa-magic"></i> Creación de la Infografía</h3>
+                        <a href="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/documentos/ANEXOS/G3_Anexo 3.pdf" target="_blank" class="btn-primary btn-blue">
+                            <i class="fas fa-file-pdf"></i> Ver G3_Anexo 3 (Guía)
+                        </a>
+                    </div>
+
+                    <!-- Tips para Infografías -->
+                    <h4 style="color: var(--text-gray); margin-bottom: 10px;">Tips para crear una Infografía de Impacto:</h4>
+                    <div class="tips-container">
+                        <div class="tip-card">
+                            <i class="fas fa-font tip-icon"></i>
+                            <div>
+                                <strong style="color: var(--sena-blue);">Menos texto, más visual:</strong> Utiliza íconos, gráficos y palabras clave. Evita bloques de texto largos.
+                            </div>
+                        </div>
+                        <div class="tip-card">
+                            <i class="fas fa-palette tip-icon"></i>
+                            <div>
+                                <strong style="color: var(--sena-blue);">Paleta de colores:</strong> Usa colores contrastantes para resaltar la información importante (ej. Colores institucionales).
+                            </div>
+                        </div>
+                        <div class="tip-card">
+                            <i class="fas fa-sitemap tip-icon"></i>
+                            <div>
+                                <strong style="color: var(--sena-blue);">Flujo lógico:</strong> Organiza la información de arriba hacia abajo o de izquierda a derecha guiando la mirada del lector.
+                            </div>
+                        </div>
+                        <div class="tip-card">
+                            <i class="fas fa-robot tip-icon"></i>
+                            <div>
+                                <strong style="color: var(--sena-blue);">Usa Prompts efectivos:</strong> Pide a la IA que estructure el contenido para infografía (ej. "Resume esto en 5 puntos clave cortos").
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interfaz de Chat Simulada -->
+                    <div class="ai-chat-interface">
+                        <div class="ai-chat-header">
+                            <img src="https://www.gstatic.com/lamda/images/sparkle_resting_v2_darkmode_2bdb7df2724e450073ede.gif" alt="AI Sparkle" style="height: 20px;">
+                            <span>Asistente de IA (Ejemplo de Prompt)</span>
+                        </div>
+                        <div class="ai-chat-body">
+                            <div class="chat-bubble chat-user">
+                                "Actúa como un diseñador de información. Toma el siguiente informe de mi proyecto de Biorremediación y extrae el Objetivo, 3 Resultados clave y la Conclusión principal en frases cortas para poner en una infografía."
+                            </div>
+                            <div class="chat-bubble chat-ai">
+                                ¡Claro! Aquí tienes la estructura optimizada para tu infografía:<br><br>
+                                <strong>Objetivo:</strong> Evaluar la capacidad de la cáscara de naranja...<br>
+                                <strong>Resultados:</strong><br>
+                                1. Reducción del 60% en concentración...<br>
+                                2. ...
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="color: var(--sena-blue); text-align: center; margin-bottom: 15px; border-top: 1px solid #eee; padding-top: 30px; margin-top: 30px;"><i class="fas fa-cloud-upload-alt"></i> Entrega de Infografía</h3>
+                    <p style="text-align: center; color: var(--text-gray);">Sube aquí el archivo de tu infografía final (Imagen o PDF).</p>
+
+                    <div class="upload-area" id="drop-zone-info">
+                        <label class="upload-label" for="evidence-info">
+                            <i class="fas fa-file-image upload-icon"></i>
+                            <span style="font-size: 1.2rem;">Cargar Infografía</span>
+                            <span style="color: var(--text-gray); font-weight: normal; font-size: 0.9rem;">(Formatos permitidos: JPG, PNG, PDF)</span>
+                        </label>
+                        <input type="file" id="evidence-info" accept="image/*,.pdf" onchange="handleFileUpload(event)">
+                        <div id="file-info-info" class="file-name"></div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn-primary" id="btnSubmit-info" onclick="submitInfographic()" disabled style="opacity: 0.5; cursor: not-allowed; padding: 12px 30px; font-size: 1.1rem;">
+                            <i class="fas fa-paper-plane"></i> Enviar Trabajo
+                        </button>
+                    </div>
+
+                    <div id="success-info" class="success-box">
+                        <div class="reward-box">
+                            <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/imagenes/06 - Insignias MOHS-Diamante.png" alt="Insignia Diamante" class="badge-img" onerror="this.src='https://placehold.co/90x90/00324D/FFFFFF?text=Diamante'">
+                            <div style="text-align: left;">
+                                <h3 style="color: var(--sena-blue); margin-bottom: 5px; font-family: 'Montserrat';"><i class="fas fa-gem"></i> ¡Guardián Legendario de la Academia Makers!</h3>
+                                <p style="font-size: 1rem; margin: 0; color: var(--sena-green); font-weight: bold;">Has obtenido la Insignia Diamante.</p>
+                            </div>
+                        </div>
+                        <p style="margin-top: 15px; font-weight: 500;">Infografía cargada exitosamente. Prepárate para socializarla con tus compañeros.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // LÓGICA BASE OBLIGATORIA
+        let progress = [false]; // 1 sola actividad (Subir Infografía)
+        let totalActivities = 1; 
+
+        function showSection(id) {
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('menu-' + id).classList.add('active');
+            document.querySelectorAll('.activity-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('sec-' + id).classList.add('active');
+        }
+
+        function markComplete(id) {
+            if (!progress[0]) { 
+                progress[0] = true;
+                document.getElementById('menu-1').classList.add('completed');
+                checkAllComplete();
+            }
+        }
+
+        function checkAllComplete() {
+            if (progress.every(Boolean)) {
+                document.getElementById('menu-final').style.display = 'block';
+            }
+        }
+
+        function finishModule() {
+            const currentModule = 5; 
+            const nextModule = currentModule + 1;
+            
+            const savedState = localStorage.getItem('vexIqState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                if (!state.completedModules.includes(currentModule)) state.completedModules.push(currentModule);
+                if (!state.unlockedModules.includes(nextModule)) state.unlockedModules.push(nextModule);
+                localStorage.setItem('vexIqState', JSON.stringify(state));
+                alert("¡Módulo Finalizado! Has obtenido la Insignia Diamante. Progreso Guardado.");
+                window.location.href = 'index.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // --- FUNCIONES ESPECÍFICAS PARA LA ACTIVIDAD ---
+        
+        let fileSelected = false;
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            const fileInfo = document.getElementById('file-info-info');
+            const submitBtn = document.getElementById('btnSubmit-info');
+            const dropZone = document.getElementById('drop-zone-info');
+
+            if (file) {
+                fileSelected = true;
+                fileInfo.innerHTML = `<strong>Archivo listo para subir:</strong> ${file.name}`;
+                dropZone.style.borderColor = "var(--sena-green)";
+                dropZone.style.backgroundColor = "#e8f5e9";
+                
+                // Habilitar botón de envío
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = "1";
+                submitBtn.style.cursor = "pointer";
+            } else {
+                fileSelected = false;
+                fileInfo.innerHTML = "";
+                dropZone.style.borderColor = "var(--sena-green)";
+                dropZone.style.backgroundColor = "#f9fbf9";
+                
+                // Deshabilitar botón
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = "0.5";
+                submitBtn.style.cursor = "not-allowed";
+            }
+        }
+
+        function submitInfographic() {
+            if (!fileSelected) {
+                alert("Por favor, selecciona el archivo de tu infografía primero.");
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmit-info');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subiendo archivo...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Ocultar botón y mostrar éxito y recompensa
+                btn.style.display = "none";
+                document.getElementById('success-info').style.display = 'block';
+                document.getElementById('evidence-info').disabled = true;
+                
+                // Marcar actividad completada
+                markComplete(1);
+                
+                // Hacer scroll suave hacia la recompensa
+                document.getElementById('success-info').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 1200); // Simular tiempo de carga
+        }
+    </script>
+</body>
+</html>

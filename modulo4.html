@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 4: ACTIVIDADES DE APROPIACIÓN</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ESTILOS GLOBALES ESTANDARIZADOS */
+        :root { --sena-green: #39A900; --sena-blue: #00324D; --sena-orange: #FF6C00; --bg-body: #F4F6F9; --bg-card: #FFFFFF; --text-gray: #59667a; --shadow: 0 4px 20px rgba(0,0,0,0.05); --radius: 12px; --menu-width: 280px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--sena-blue); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; position: relative;}
+        
+        /* FONDO / MARCA DE AGUA */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/salon de quimica.png");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.65; /* No muy transparente */
+            z-index: -1;
+        }
+
+        /* HEADER */
+        header { background-color: var(--bg-card); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 100; position: sticky; top: 0;}
+        .back-btn { text-decoration: none; color: var(--sena-blue); font-weight: bold; display: flex; align-items: center; gap: 10px; transition: color 0.3s; }
+        .back-btn:hover { color: var(--sena-orange); }
+
+        /* LAYOUT */
+        .main-layout { display: flex; flex: 1; max-width: 1400px; margin: 2rem auto; gap: 2rem; width: 100%; padding: 0 20px; }
+        .sidebar { width: var(--menu-width); background: rgba(255, 255, 255, 0.95); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; height: fit-content; position: sticky; top: 6rem; }
+        .sidebar h3 { font-family: 'Montserrat'; color: var(--sena-green); margin-bottom: 1.5rem; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; transition: all 0.3s; color: var(--text-gray); font-weight: 500; position: relative; }
+        .menu-item:hover { background: #f0fdf4; color: var(--sena-green); }
+        .menu-item.active { background: var(--sena-green); color: white; box-shadow: 0 4px 10px rgba(57, 169, 0, 0.3); }
+        .menu-item.completed::after { content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; right: 15px; color: var(--sena-green); }
+        .menu-item.active.completed::after { color: white; }
+
+        /* CONTENIDO */
+        .content-area { flex: 1; background: rgba(255, 255, 255, 0.95); border-radius: var(--radius); box-shadow: var(--shadow); padding: 2.5rem; min-height: 600px; }
+        .activity-section { display: none; animation: fadeIn 0.5s ease; }
+        .activity-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .section-header h2 { font-family: 'Montserrat'; color: var(--sena-blue); font-size: 1.8rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        /* BOTONES Y FORMULARIOS */
+        .btn-primary { background: var(--sena-orange); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.3s; display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-size: 1rem;}
+        .btn-primary:hover { background: #e65100; }
+        .btn-blue { background: var(--sena-blue); }
+        .btn-blue:hover { background: #001f33; }
+        .btn-green { background: var(--sena-green); }
+        .btn-green:hover { background: #2e8b00; }
+        
+        /* AREA DE CARGA (UPLOAD) */
+        input[type="file"] { display: none; }
+        .upload-area { border: 2px dashed var(--sena-green); padding: 30px 20px; text-align: center; border-radius: var(--radius); background: #f9fbf9; margin-top: 20px; transition: all 0.3s; }
+        .upload-area:hover { background: #f0fdf4; border-color: #2e8b00; }
+        .upload-label { display: inline-flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer; color: var(--sena-green); font-weight: bold; width: 100%; }
+        .upload-icon { font-size: 2.5rem; color: var(--sena-green); }
+        .file-name { margin-top: 10px; font-size: 0.9rem; color: var(--sena-blue); font-weight: normal; }
+
+        /* CAJAS DE INFORMACIÓN */
+        .info-box { background: #e3f2fd; border-left: 4px solid var(--sena-blue); padding: 15px 20px; border-radius: 4px; margin-bottom: 25px; }
+        .alert-box { background: #fff3e0; border-left: 5px solid var(--sena-orange); padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .success-box { background: #e8f5e9; border: 1px solid var(--sena-green); padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center; display: none; }
+
+        /* RECOMPENSA */
+        .reward-box { margin-top: 20px; display: flex; align-items: center; gap: 15px; background: #fce4ec; padding: 15px; border-radius: 8px; border: 1px solid #e91e63; }
+        .badge-img { width: 70px; height: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+
+        /* AREA FINAL */
+        .finish-area { margin-top: 2rem; text-align: center; padding: 2rem; background: #e8f5e9; border: 2px dashed var(--sena-green); border-radius: var(--radius); display: none; }
+
+        @media (max-width: 768px) { .main-layout { flex-direction: column; } .sidebar { width: 100%; position: static; } }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-left">
+            <img src="imagenes/sena.png" style="height: 50px;" onerror="this.src='https://placehold.co/100x50/FFFFFF/39A900?text=SENA'">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Centro de Comando</a>
+        </div>
+        <img src="imagenes/tecnoacademia.jpeg" style="height: 50px;" onerror="this.src='https://placehold.co/150x50/FFFFFF/00324D?text=Tecnoacademia'">
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <h3><i class="fas fa-list-ul"></i> Proyectos</h3>
+            
+            <div id="menu-1" class="menu-item active" onclick="showSection(1)">
+                <i class="fas fa-info-circle"></i> 1. Introducción
+            </div>
+            <div id="menu-2" class="menu-item" onclick="showSection(2)">
+                <i class="fas fa-leaf"></i> PROYECTO 1
+            </div>
+            <div id="menu-3" class="menu-item" onclick="showSection(3)">
+                <i class="fas fa-recycle"></i> PROYECTO 2
+            </div>
+            
+            <div id="menu-final" class="finish-area" style="padding: 10px; margin-top: 20px; display: none;">
+                <p style="font-size:0.9rem; color:var(--sena-green); font-weight:bold;"><i class="fas fa-star" style="color: gold;"></i> ¡Módulo Completado!</p>
+                <button class="btn-primary" style="width:100%; justify-content:center; font-size:0.8rem; margin-top: 10px;" onclick="finishModule()">
+                    Avanzar Siguiente Nivel
+                </button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            
+            <!-- SECCIÓN 1: INTRODUCCIÓN -->
+            <section id="sec-1" class="activity-section active">
+                <div class="section-header">
+                    <h2>Módulo 4: ACTIVIDADES DE APROPIACIÓN</h2>
+                </div>
+
+                <div class="info-box" style="display: flex; align-items: center; justify-content: space-between;">
+                    <p style="margin: 0;"><strong><i class="fas fa-clock"></i> Tiempo Estimado Total:</strong> 20 horas presenciales y 12 de trabajo autónomo.</p>
+                </div>
+
+                <div style="display: flex; gap: 30px; margin-bottom: 30px; align-items: stretch; flex-wrap: wrap;">
+                    
+                    <!-- Texto Central -->
+                    <div style="flex: 1; min-width: 300px; text-align: justify;">
+                        <p style="margin-bottom: 15px; font-size: 1.05rem;">
+                            En el desarrollo de las siguientes sesiones, tendrás la oportunidad de llevar a cabo diferentes proyectos de investigación que buscan por medio de la aplicación de herramientas biotecnológicas, resolver problemas reales.
+                        </p>
+                        
+                        <p style="margin-bottom: 15px;">
+                            En esta misión los Makers CellEste y Dani Pasteur se verán envueltos en el fantástico Mundo de la Biotecnología aplicada para librar a sus pobladores de los malvados monstruos <strong>Metal Pesado</strong> y <strong>Plástico</strong>, quienes están destruyendo su mundo. La Dra. Rosalind los acompañará mostrándoles las estrategias para destruir a los malvados monstruos mediante la <strong>Biorremediación</strong> y los <strong>Bioplásticos</strong>.
+                        </p>
+
+                        <div class="alert-box">
+                            <h4 style="color: var(--sena-orange); margin-bottom: 10px;"><i class="fas fa-shield-alt"></i> ¡Apreciado MAKER!</h4>
+                            <p style="margin-bottom: 10px;">Recuerda aplicar el protocolo de limpieza y desinfección establecido en el Manual de Bioseguridad de la Tecnoacademia, el cual será socializado por tu facilitador, al igual que cumplir el protocolo de bioseguridad contenido en los anexos de esta guía, así aportarás al desarrollo seguro de las formaciones.</p>
+                            <a href="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/documentos/MANUAL DE BIOSEGURIDAD LABORATORIOS TALLERES TECNOACADEMIA MANIZALES V2.0 (1).pdf" target="_blank" class="btn-primary" style="font-size: 0.85rem; padding: 8px 15px;">
+                                <i class="fas fa-file-pdf"></i> Manual de Bioseguridad
+                            </a>
+                        </div>
+
+                        <!-- Recompensa -->
+                        <div class="reward-box">
+                            <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/imagenes/04 - Insignias MOHS-Rubí.png" alt="Insignia Rubí" class="badge-img" onerror="this.src='https://placehold.co/70x70/e91e63/FFFFFF?text=Rubi'">
+                            <div>
+                                <h4 style="color: #e91e63; margin-bottom: 5px; font-family: 'Montserrat';"><i class="fas fa-gem"></i> Recompensa de la Misión</h4>
+                                <p style="font-size: 0.95rem; margin: 0; color: var(--sena-blue);">Al finalizar esta actividad recibirás la <strong>Insignia Rubí</strong>.</p>
+                            </div>
+                        </div>
+
+                        <div style="background: #e1f5fe; border: 1px solid #81d4fa; padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center;">
+                            <h4 style="color: var(--sena-blue); margin-bottom: 10px;"><i class="fas fa-hand-pointer"></i> INSTRUCCIÓN IMPORTANTE</h4>
+                            <p>A partir de ahora deberás elegir <strong>uno de los dos proyectos</strong> (Proyecto 1 o Proyecto 2) en el menú lateral y enfocarte en su desarrollo.</p>
+                        </div>
+                    </div>
+
+                    <!-- Imágenes Derecha -->
+                    <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 20px; align-items: center; justify-content: center;">
+                        <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/Dr. Patarroyo.png" alt="Dr. Patarroyo" style="width: 160px; border-radius: 12px; box-shadow: var(--shadow);" onerror="this.src='https://placehold.co/160x200/F4F6F9/00324D?text=Dr.+Patarroyo'">
+                        <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/Maker Mujer CIENCIAS.png" alt="Maker Mujer" style="width: 160px; border-radius: 12px; box-shadow: var(--shadow);" onerror="this.src='https://placehold.co/160x200/F4F6F9/39A900?text=Maker'">
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 2: PROYECTO 1 -->
+            <section id="sec-2" class="activity-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-leaf" style="color: var(--sena-green);"></i> PROYECTO 1. BIORREMEDIACIÓN</h2>
+                    <h4 style="color: var(--text-gray); font-weight: 500; font-size: 1.1rem;">LA BIOADSORCIÓN COMO ALTERNATIVA PARA EL TRATAMIENTO DE AGUAS CONTAMINADAS CON METALES PESADOS</h4>
+                </div>
+
+                <div style="background: white; padding: 25px; border-radius: var(--radius); border: 1px solid #e0e0e0; box-shadow: 0 5px 15px rgba(0,0,0,0.02); margin-bottom: 25px;">
+                    <p style="text-align: justify; margin-bottom: 15px;">
+                        ¿Qué son los metales pesados?, ¿Cómo afecta la salud de las personas el consumo de aguas contaminadas con estos metales? Y lo más importante ¿Cómo la biotecnología está aportando soluciones para resolver estos problemas?, son algunas de las preguntas que abordaremos en las próximas tres sesiones de trabajo, para ello presta atención a tu facilitador y sigue atentamente sus indicaciones.
+                    </p>
+                    
+                    <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="color: var(--sena-orange); margin-bottom: 5px;"><i class="fas fa-box-open"></i> Materiales:</h4>
+                        <p style="font-size: 0.95rem;">Computador, tableta o celular, molino, horno de convección o estufa, fotómetro, kit para detección de cobre, cascaras, y/o naranja.</p>
+                    </div>
+
+                    <h4 style="color: var(--sena-blue); margin-bottom: 10px;"><i class="fas fa-play-circle"></i> Antes de comenzar:</h4>
+                    <p style="text-align: justify; margin-bottom: 15px; font-size: 0.95rem;">
+                        Con tu equipo de trabajo realizarás en las próximas cinco sesiones una serie de actividades encaminadas al uso de residuos agrícolas, específicamente cascaras de frutas como maracuyá y naranja, para procesos biotecnológicos de biorremediación, un concepto ya antes visto en clase.
+                    </p>
+                    <p style="text-align: justify; margin-bottom: 15px; font-size: 0.95rem;">
+                        Para cada sesión tu facilitador usará presentaciones y otras herramientas basadas en los anexos que se especificaran más adelante, recuerda usar siempre guantes, tapabocas y bata de laboratorio, para conservar las normas de bioseguridad y mitigar cualquier posible accidente en el laboratorio. En cada una de las tres sesiones recibirás un protocolo o instrucciones de trabajo, síguelas paso a paso y según las aclaraciones que tu facilitador te haga, al final de las sesiones estarás en capacidad de comprender y aplicar un proceso sencillo y eficiente y efectivo que puede ser implementado para el tratamiento de aguas contaminadas con metales pesados.
+                    </p>
+
+                    <div style="display: flex; align-items: center; justify-content: space-between; background: #e8f5e9; padding: 15px 20px; border-radius: 8px; border-left: 5px solid var(--sena-green); margin-bottom: 20px;">
+                        <div>
+                            <p style="margin: 0; font-weight: bold; color: var(--sena-green);">Documento Guía del Proyecto</p>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-gray);">En este encontrarás toda la información necesaria para el desarrollo de los experimentos.</p>
+                        </div>
+                        <a href="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/documentos/ANEXOS/Proyecto 1. Biorremediación con residuos agroindustriales/G3_Anexo 1.pdf" target="_blank" class="btn-primary btn-green" style="padding: 8px 15px;">
+                            <i class="fas fa-file-pdf"></i> Ver ANEXO G3_Anexo 1
+                        </a>
+                    </div>
+
+                    <div style="background: #fff3e0; padding: 15px; border-radius: 8px; border: 1px dashed var(--sena-orange); margin-bottom: 25px;">
+                        <h4 style="color: var(--sena-orange); margin-bottom: 5px;"><i class="fas fa-lightbulb"></i> Hipótesis de Investigación:</h4>
+                        <p style="font-style: italic; margin: 0; text-align: justify;">"La bioadsorción con cáscaras de naranja y maracuyá es una técnica efectiva para remover el cobre en aguas contaminadas, siendo una alternativa para su tratamiento mediante biorremediación."</p>
+                    </div>
+
+                    <h3 style="color: var(--sena-blue); text-align: center; margin-bottom: 15px; border-top: 1px solid #eee; padding-top: 20px;"><i class="fas fa-camera"></i> Evidencias del Proyecto 1</h3>
+                    <p style="text-align: center; color: var(--text-gray);">Sube aquí las evidencias fotográficas de todo el proceso realizado en el laboratorio.</p>
+
+                    <div class="upload-area" id="drop-zone-p1">
+                        <label class="upload-label" for="evidence-p1">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <span style="font-size: 1.2rem;">Cargar Evidencias Fotográficas</span>
+                            <span style="color: var(--text-gray); font-weight: normal; font-size: 0.9rem;">(Formatos permitidos: JPG, PNG, PDF)</span>
+                        </label>
+                        <input type="file" id="evidence-p1" accept="image/*,.pdf" multiple onchange="handleFileUpload(event, 1)">
+                        <div id="file-info-p1" class="file-name"></div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn-primary" id="btnSubmit-p1" onclick="submitProject(1)" disabled style="opacity: 0.5; cursor: not-allowed;">
+                            <i class="fas fa-paper-plane"></i> Enviar Proyecto 1
+                        </button>
+                    </div>
+
+                    <div id="success-p1" class="success-box">
+                        <i class="fas fa-check-circle fa-2x" style="color: var(--sena-green); margin-bottom: 10px;"></i><br>
+                        <strong style="color: var(--sena-green);">¡Evidencias del Proyecto 1 enviadas exitosamente!</strong><br>
+                        Has completado la actividad de apropiación.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 3: PROYECTO 2 -->
+            <section id="sec-3" class="activity-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-recycle" style="color: var(--sena-orange);"></i> PROYECTO 2. BIOPLÁSTICOS</h2>
+                    <h4 style="color: var(--text-gray); font-weight: 500; font-size: 1.1rem;">DESARROLLO DE UN BIOPLÁSTICO A PARTIR DE RESIDUOS AGROINDUSTRIALES</h4>
+                </div>
+
+                <div style="background: white; padding: 25px; border-radius: var(--radius); border: 1px solid #e0e0e0; box-shadow: 0 5px 15px rgba(0,0,0,0.02); margin-bottom: 25px;">
+                    <p style="text-align: justify; margin-bottom: 15px;">
+                        ¿Qué son los plásticos?, ¿De dónde provienen? ¿Cómo afecta la generación de plásticos al medio ambiente? Y lo más importante ¿Cómo la biotecnología está aportando soluciones para resolver estos problemas?, son algunas de las preguntas que abordaremos en las próximas tres sesiones de trabajo. Es muy importante que asumas un tu rol como investigador, ya que proyectos como este ayudan a resolver problemas ambientales que se presentan en muchos lugares del planeta tierra.
+                    </p>
+                    
+                    <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                        <h4 style="color: var(--sena-orange); margin-bottom: 5px;"><i class="fas fa-box-open"></i> Materiales:</h4>
+                        <p style="font-size: 0.95rem;">Computador, tableta o celular, planchas de calentamiento con agitación, horno de convección o estufa, molino, cascaras de naranja.</p>
+                    </div>
+
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; border: 1px solid #90caf9; margin-bottom: 20px;">
+                        <h4 style="color: var(--sena-blue); margin-bottom: 5px;"><i class="fas fa-question-circle"></i> Pregunta problema:</h4>
+                        <p style="font-weight: bold; margin: 0; text-align: center;">¿Será posible desarrollar un material biodegradable a partir de cáscara de naranja que pueda sustituir el plástico en alguno de sus usos?</p>
+                    </div>
+
+                    <h4 style="color: var(--sena-blue); margin-bottom: 10px;"><i class="fas fa-play-circle"></i> Antes de comenzar:</h4>
+                    <p style="text-align: justify; margin-bottom: 15px; font-size: 0.95rem;">
+                        Con tu equipo de trabajo realizaras en las próximas cinco sesiones una serie de actividades encaminadas desarrollo de un bioplástico a partir residuos agroindustriales, específicamente cascaras de frutas naranja. Para cada sesión tu facilitador usará presentaciones y otras herramientas basadas en los anexos que se especificarán más adelante, recuerda usar siempre guantes, tapabocas y bata de laboratorio, para conservar las normas de bioseguridad y mitigar cualquier posible accidente en el laboratorio.
+                    </p>
+                    <p style="text-align: justify; margin-bottom: 15px; font-size: 0.95rem;">
+                        En cada una de las cinco sesiones recibirás un protocolo o instrucciones de trabajo, síguelas paso a paso y según las aclaraciones que tu facilitador te haga, al final de las sesiones estarás en capacidad de comprender y aplicar un proceso sencillo, eficiente y efectivo que puede ser implementado desarrollo de bioplásticos a partir residuos agroindustriales.
+                    </p>
+
+                    <div style="display: flex; align-items: center; justify-content: space-between; background: #fff3e0; padding: 15px 20px; border-radius: 8px; border-left: 5px solid var(--sena-orange); margin-bottom: 20px;">
+                        <div>
+                            <p style="margin: 0; font-weight: bold; color: var(--sena-orange);">Documento Guía del Proyecto</p>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-gray);">En este encontrarás toda la información necesaria para el desarrollo de los experimentos.</p>
+                        </div>
+                        <a href="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/documentos/ANEXOS/Proyecto 2. Bioplástico con residuos agroindustriales/G3_Anexo 2.pdf" target="_blank" class="btn-primary" style="padding: 8px 15px;">
+                            <i class="fas fa-file-pdf"></i> Ver ANEXO G3_Anexo 2
+                        </a>
+                    </div>
+
+                    <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; border: 1px dashed var(--sena-green); margin-bottom: 25px;">
+                        <h4 style="color: var(--sena-green); margin-bottom: 5px;"><i class="fas fa-lightbulb"></i> Hipótesis de Investigación:</h4>
+                        <p style="font-style: italic; margin: 0; text-align: justify;">"El aprovechamiento de residuos orgánicos con altos contenidos de pectina permite el desarrollo de bioplásticos que posteriormente puedan ser utilizados para los empaques de alimentos cumpliendo los parámetros de calidad."</p>
+                    </div>
+
+                    <h3 style="color: var(--sena-blue); text-align: center; margin-bottom: 15px; border-top: 1px solid #eee; padding-top: 20px;"><i class="fas fa-camera"></i> Evidencias del Proyecto 2</h3>
+                    <p style="text-align: center; color: var(--text-gray);">Sube aquí las evidencias fotográficas de la ejecución de su proyecto.</p>
+
+                    <div class="upload-area" id="drop-zone-p2">
+                        <label class="upload-label" for="evidence-p2">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <span style="font-size: 1.2rem;">Cargar Evidencias Fotográficas</span>
+                            <span style="color: var(--text-gray); font-weight: normal; font-size: 0.9rem;">(Formatos permitidos: JPG, PNG, PDF)</span>
+                        </label>
+                        <input type="file" id="evidence-p2" accept="image/*,.pdf" multiple onchange="handleFileUpload(event, 2)">
+                        <div id="file-info-p2" class="file-name"></div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn-primary btn-blue" id="btnSubmit-p2" onclick="submitProject(2)" disabled style="opacity: 0.5; cursor: not-allowed;">
+                            <i class="fas fa-paper-plane"></i> Enviar Proyecto 2
+                        </button>
+                    </div>
+
+                    <div id="success-p2" class="success-box">
+                        <i class="fas fa-check-circle fa-2x" style="color: var(--sena-green); margin-bottom: 10px;"></i><br>
+                        <strong style="color: var(--sena-green);">¡Evidencias del Proyecto 2 enviadas exitosamente!</strong><br>
+                        Has completado la actividad de apropiación.
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        // LÓGICA BASE OBLIGATORIA
+        // Solo requerimos completar 1 proyecto, así que el array tiene 1 elemento que representa "Proyecto Completado"
+        let progress = [false]; 
+        let totalActivities = 1; 
+
+        function showSection(id) {
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('menu-' + id).classList.add('active');
+            document.querySelectorAll('.activity-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('sec-' + id).classList.add('active');
+        }
+
+        function markComplete(id) {
+            if (!progress[0]) { // Usamos el índice 0 genérico
+                progress[0] = true;
+                // Marcar en el menú el proyecto elegido
+                document.getElementById('menu-' + (id + 1)).classList.add('completed');
+                checkAllComplete();
+            }
+        }
+
+        function checkAllComplete() {
+            if (progress.every(Boolean)) {
+                document.getElementById('menu-final').style.display = 'block';
+            }
+        }
+
+        function finishModule() {
+            const currentModule = 4; // Módulo actual
+            const nextModule = currentModule + 1;
+            
+            const savedState = localStorage.getItem('vexIqState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                if (!state.completedModules.includes(currentModule)) state.completedModules.push(currentModule);
+                if (!state.unlockedModules.includes(nextModule)) state.unlockedModules.push(nextModule);
+                localStorage.setItem('vexIqState', JSON.stringify(state));
+                alert("¡Módulo Finalizado! Has obtenido la Insignia Rubí. Progreso Guardado.");
+                window.location.href = 'index.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // --- FUNCIONES ESPECÍFICAS PARA LA ACTIVIDAD ---
+        
+        let filesSelected = { 1: false, 2: false };
+
+        function handleFileUpload(event, projectId) {
+            const files = event.target.files;
+            const fileInfo = document.getElementById('file-info-p' + projectId);
+            const submitBtn = document.getElementById('btnSubmit-p' + projectId);
+            const dropZone = document.getElementById('drop-zone-p' + projectId);
+
+            if (files && files.length > 0) {
+                filesSelected[projectId] = true;
+                let fileNames = Array.from(files).map(f => f.name).join(', ');
+                fileInfo.innerHTML = `<strong>Archivos seleccionados:</strong> ${fileNames}`;
+                dropZone.style.borderColor = "var(--sena-green)";
+                dropZone.style.backgroundColor = "#e8f5e9";
+                
+                // Habilitar botón de envío
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = "1";
+                submitBtn.style.cursor = "pointer";
+            } else {
+                filesSelected[projectId] = false;
+                fileInfo.innerHTML = "";
+                dropZone.style.borderColor = "var(--sena-green)";
+                dropZone.style.backgroundColor = "#f9fbf9";
+                
+                // Deshabilitar botón
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = "0.5";
+                submitBtn.style.cursor = "not-allowed";
+            }
+        }
+
+        function submitProject(projectId) {
+            if (!filesSelected[projectId]) {
+                alert("Por favor, selecciona al menos un archivo de evidencia primero.");
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmit-p' + projectId);
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                // Ocultar botón y mostrar éxito
+                btn.style.display = "none";
+                document.getElementById('success-p' + projectId).style.display = 'block';
+                document.getElementById('evidence-p' + projectId).disabled = true;
+                
+                // Bloquear el otro proyecto (ya eligió uno)
+                const otherProject = projectId === 1 ? 2 : 1;
+                document.getElementById('btnSubmit-p' + otherProject).disabled = true;
+                document.getElementById('evidence-p' + otherProject).disabled = true;
+                
+                // Marcar actividad completada pasándole el ID del proyecto
+                markComplete(projectId);
+            }, 1000); // Simular tiempo de carga
+        }
+    </script>
+</body>
+</html>

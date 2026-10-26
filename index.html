@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Interactiva - Tecnoacademia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Paleta SENA */
+            --sena-green: #39A900;
+            --sena-blue: #00324D;
+            --sena-orange: #FF6C00;
+            --bg-body: #F4F6F9;
+            --bg-card: #FFFFFF;
+            --text-gray: #59667a;
+            --shadow: 0 4px 20px rgba(0,0,0,0.05);
+            --radius: 12px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Roboto', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--sena-blue); 
+            line-height: 1.6; 
+            position: relative;
+        }
+
+        /* FONDO TRANSPARENTE CON AULA TECNOLOGICA */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_2/imagenes/aula tecnologica.png");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15; /* Transparencia no muy clara */
+            z-index: -1;
+        }
+
+        /* HEADER & CONTROLS */
+        header { background-color: var(--bg-card); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .brand-logos img { height: 50px; width: auto; }
+        .program-info h1 { font-family: 'Montserrat', sans-serif; font-size: 1rem; color: var(--sena-blue); line-height: 1.2; }
+        .program-info span { font-size: 0.8rem; color: var(--sena-green); font-weight: 700; }
+        
+        .data-controls { display: flex; gap: 10px; align-items: center; }
+        .btn-data { background: #e9ecef; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; display: flex; align-items: center; gap: 5px; color: var(--sena-blue); }
+        .btn-data:hover { background: var(--sena-blue); color: white; }
+        .btn-save { border: 1px solid var(--sena-green); color: var(--sena-green); background: white; }
+        .btn-logout { background: #ffebee; color: #d32f2f; border: 1px solid #ffcdd2; }
+        #fileInput { display: none; }
+
+        /* GAMIFICATION BAR */
+        .gamification-bar { background: #fff; padding: 10px 2rem; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: var(--shadow); }
+        .progress-container { width: 100%; max-width: 600px; background: #e9ecef; height: 10px; border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--sena-green), var(--sena-orange)); transition: width 1s ease; }
+        .level-badge { background: var(--sena-orange); color: white; padding: 2px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
+
+        /* ESTILOS ADICIONALES PARA SECCIÓN STEAM E INSIGNIAS (Efecto Vancouver) */
+        .steam-section {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+        .steam-letters-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .steam-letter {
+            width: 70px;
+            height: auto;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.4s ease;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+            cursor: pointer;
+        }
+        /* Efecto Vancouver: elevar y mover */
+        .steam-letter:hover {
+            transform: translateY(-20px) scale(1.15);
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.3));
+        }
+        .badge-item {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* GRID & CARDS */
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 20px; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .module-card { background: var(--bg-card); border-radius: var(--radius); padding: 2rem; box-shadow: var(--shadow); transition: all 0.3s ease; cursor: pointer; position: relative; min-height: 220px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
+        .module-card:hover { transform: translateY(-5px); border-bottom: 4px solid var(--sena-green); }
+        .module-card.locked { opacity: 0.7; pointer-events: none; filter: grayscale(0.8); }
+        .module-card.highlight { background: linear-gradient(135deg, var(--sena-blue), #001f33); }
+        .module-card.highlight h3, .module-card.highlight p, .module-card.highlight .card-number-bg { color: white; }
+        .card-number-bg { position: absolute; top: -10px; right: 10px; font-size: 5rem; font-weight: 900; color: rgba(0,0,0,0.03); font-family: 'Montserrat'; }
+        .card-icon { font-size: 2rem; color: var(--sena-green); margin-bottom: 1rem; background: rgba(57, 169, 0, 0.1); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
+        .status-indicator { font-size: 0.8rem; font-weight: 500; display: flex; align-items: center; gap: 5px; }
+        .status-indicator.completed { color: var(--sena-green); }
+        .status-indicator.active { color: var(--sena-orange); }
+        .status-indicator.locked { color: var(--text-gray); }
+
+        /* LOGIN MODAL */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 50, 77, 0.9); display: flex; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(5px); }
+        .modal-box { background: white; padding: 3rem; border-radius: var(--radius); width: 90%; max-width: 450px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+        .modal-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #e0e0e0; border-radius: 8px; }
+        .modal-btn { background: var(--sena-green); color: white; border: none; padding: 12px 30px; border-radius: 30px; cursor: pointer; width: 100%; font-weight: bold; }
+    </style>
+</head>
+
+<body>
+
+    <!-- MODAL -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="modal-box">
+            <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_2/imagenes/SENA_T.png" alt="SENA" style="height: 60px; margin-bottom: 1rem;">
+            <h2>Identificación de Maker</h2>
+            <p style="margin-bottom: 20px; color: var(--text-gray);">Ingresa tus datos para iniciar la misión.</p>
+            <input type="text" id="studentName" class="modal-input" placeholder="Nombre Completo">
+            <input type="text" id="studentId" class="modal-input" placeholder="Documento / ID">
+            <button class="modal-btn" onclick="app.login()">Iniciar Misión</button>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header>
+        <div class="brand-area" style="display: flex; align-items: center;">
+            <div class="brand-logos"><img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_2/imagenes/SENA_T.png" alt="Logo SENA"></div>
+            <div class="program-info" style="margin-left: 15px;">
+                <h1>APLICACIONES Y DESARROLLO DE PROCESOS BIOTECNOLÓGICOS <span style="font-size: 1.2rem; color: var(--sena-green); margin-left: 5px;">[GUÍA 3]</span></h1>
+                <span>CÓDIGO: 22210045</span>
+            </div>
+        </div>
+        <div class="data-controls">
+            <button class="btn-data btn-save" onclick="app.downloadProgress()"><i class="fas fa-download"></i> Guardar</button>
+            <button class="btn-data" onclick="document.getElementById('fileInput').click()"><i class="fas fa-upload"></i> Cargar</button>
+            <button class="btn-data btn-logout" onclick="app.logout()"><i class="fas fa-sign-out-alt"></i> Salir</button>
+            <input type="file" id="fileInput" accept=".json,.txt" onchange="app.uploadProgress(event)">
+            <div style="margin-left:10px; text-align:right;">
+                <span id="displayUserName" style="font-weight:bold; font-size:0.9rem; display:block;">Invitado</span>
+                <span id="displayUserId" style="font-size:0.7rem; color:var(--text-gray); display:block;">ID: ---</span>
+            </div>
+            <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_2/imagenes/TECNO_V.jpeg" alt="Logo Tecno" style="height:40px; margin-left:10px;">
+        </div>
+    </header>
+
+    <div class="gamification-bar">
+        <span>Progreso:</span>
+        <div class="progress-container"><div class="progress-fill" id="globalProgress"></div></div>
+        <div class="level-badge" id="levelBadge">Novato</div>
+    </div>
+
+    <div class="container" id="app">
+        <!-- INTRO -->
+        <div style="margin: 2rem 0; display: flex; align-items: center; justify-content: space-between; gap: 30px; background: rgba(255, 255, 255, 0.85); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow);">
+            <!-- Científico Izquierda -->
+            <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_2/imagenes/Dr. Patarroyo.png" alt="Dr. Patarroyo" style="height: 220px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+            
+            <div style="text-align:justify; flex: 1;">
+                <h2 style="font-family:'Montserrat'; color:var(--sena-blue); text-align: center; margin-bottom: 15px; font-size: 1.8rem;">¡Bienvenidos super aprendices!</h2>
+                <p>Ya realizaste el recorrido experimental en el laboratorio e identificaste las bases científicas de la Biotecnología, los elementos importantes dentro de este, los experimentos y sus aplicaciones. En la presente guía aplicaremos esos conocimientos en la solución de problemas reales que en la actualidad enfrenta la sociedad, esto por medio del desarrollo de proyectos que apliquen las herramientas que los diferentes tipos de Biotecnología nos brindan. Para esto, debes asumir tu rol como investigador principal, ya que se requiere de compromiso, dedicación y sobre todo que tengas muchas ganas de divertirte y aprender.</p>
+                <p style="margin-top: 10px;">Anímate a trabajar en equipo con tus compañeros, aprender sobre los temas propuestos y desarrollar todas las actividades relacionadas. El Facilitador dependiendo de la dinámica y viabilidad, podrá orientar con gamificación este curso, en dicho caso puedes obtener las insignias que encontrarás a lo largo de esta guía. Ten presente que a medida que avances en la guía, encontrarás diferentes Objetivos de Desarrollo Sostenible (ODS) y las letras de enfoque de aprendizaje STEAM (Por sus siglas en inglés: Science, Technology, Engineering, Art, Mathematics) relacionados con las actividades planteadas y algunas podrían estar asociadas a la cultura o mentalidad de emprendimiento.</p>
+            </div>
+
+            <!-- Científica Derecha -->
+            <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_2/imagenes/Dra. Rosalind.png" alt="Dra. Rosalind" style="height: 220px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.15);">
+        </div>
+
+        <!-- SECCIÓN STEAM E INSIGNIAS -->
+        <div class="steam-section">
+            <h3 style="font-family: 'Montserrat'; color: var(--sena-blue); font-size: 1.5rem;">Con Enfoque educativo STEAM</h3>
+            <div class="steam-letters-container">
+                <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_2/imagenes/Pin S.png" alt="S" class="steam-letter">
+                <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_2/imagenes/Pin T.png" alt="T" class="steam-letter">
+                <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_2/imagenes/Pin E.png" alt="E" class="steam-letter">
+                <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_2/imagenes/Pin A.png" alt="A" class="steam-letter">
+                <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_2/imagenes/Pin M.png" alt="M" class="steam-letter">
+            </div>
+
+            <hr style="border: 0; height: 1px; background: #e0e0e0; margin: 2rem 0;">
+
+            <h3 style="font-family: 'Montserrat'; color: var(--sena-blue); font-size: 1.2rem; margin-bottom: 20px;">Durante el transcurso de esta guía obtendrás las siguientes insignias</h3>
+            <div class="steam-letters-container" style="gap: 40px;">
+                <div class="badge-item">
+                    <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/imagenes/04 - Insignias MOHS-Rubí.png" alt="Insignia Rubí" class="steam-letter" style="width: 100px;">
+                    <span style="font-weight: bold; color: #e91e63;">Insignia Rubí</span>
+                </div>
+                <div class="badge-item">
+                    <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/imagenes/06 - Insignias MOHS-Diamante.png" alt="Insignia Diamante" class="steam-letter" style="width: 100px;">
+                    <span style="font-weight: bold; color: var(--sena-blue);">Insignia Diamante</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MÓDULOS GRID -->
+        <div class="dashboard-grid">
+            
+            <!-- Módulo 0 -->
+            <div class="module-card" id="card-0" onclick="app.openModule(0)">
+                <div class="card-number-bg">00</div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-book-open"></i></div>
+                    <h3>IDENTIFICACIÓN DE LA GUIA DE APRENDIZAJE</h3>
+                    <p>Inicia tu ruta reconociendo la estructura y los objetivos de esta guía formativa.</p>
+                </div>
+                <div class="status-indicator" id="status-0"><i class="fas fa-lock"></i> Pendiente</div>
+            </div>
+
+            <!-- Módulo 1 -->
+            <div class="module-card" id="card-1" onclick="app.openModule(1)">
+                <div class="card-number-bg">01</div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-shield-virus"></i></div>
+                    <h3>NORMAS DE BIOSEGURIDAD</h3>
+                    <p>Aprende y aplica los protocolos esenciales para trabajar de manera segura en el laboratorio.</p>
+                </div>
+                <div class="status-indicator" id="status-1"><i class="fas fa-lock"></i> Pendiente</div>
+            </div>
+
+            <!-- Módulo 2 -->
+            <div class="module-card" id="card-2" onclick="app.openModule(2)">
+                <div class="card-number-bg">02</div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h3>REFLEXIÓN INICIAL</h3>
+                    <p>Cuestiona y analiza tus conocimientos previos sobre las aplicaciones biotecnológicas.</p>
+                </div>
+                <div class="status-indicator" id="status-2"><i class="fas fa-lock"></i> Pendiente</div>
+            </div>
+
+            <!-- Módulo 3 -->
+            <div class="module-card" id="card-3" onclick="app.openModule(3)">
+                <div class="card-number-bg">03</div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-sitemap"></i></div>
+                    <h3>ACTIVIDADES DE CONTEXTUALIZACIÓN</h3>
+                    <p>Sitúate en el entorno científico y comprende el alcance de los retos a resolver.</p>
+                </div>
+                <div class="status-indicator" id="status-3"><i class="fas fa-lock"></i> Pendiente</div>
+            </div>
+
+            <!-- Módulo 4 -->
+            <div class="module-card" id="card-4" onclick="app.openModule(4)">
+                <div class="card-number-bg">04</div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-microscope"></i></div>
+                    <h3>ACTIVIDADES DE APROPIACIÓN</h3>
+                    <p>Sumérgete en el conocimiento técnico y fundamenta tus bases teóricas y prácticas.</p>
+                </div>
+                <div class="status-indicator" id="status-4"><i class="fas fa-lock"></i> Pendiente</div>
+            </div>
+
+            <!-- Módulo 5 -->
+            <div class="module-card" id="card-5" onclick="app.openModule(5)">
+                <div class="card-number-bg">05</div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-share-nodes"></i></div>
+                    <h3>ACTIVIDADES DE TRANSFERENCIA</h3>
+                    <p>Aplica lo aprendido a problemas reales e integra tus conocimientos con el enfoque STEAM.</p>
+                </div>
+                <div class="status-indicator" id="status-5"><i class="fas fa-lock"></i> Pendiente</div>
+            </div>
+
+            <!-- Módulo 6 (Destacado) -->
+            <div class="module-card highlight" id="card-6" onclick="app.openModule(6)">
+                <div class="card-number-bg">06</div>
+                <div class="card-content">
+                    <div class="card-icon" style="background: rgba(255,255,255,0.2); color: white;"><i class="fas fa-clipboard-check"></i></div>
+                    <h3>EVIDENCIAS DE APRENDIZAJE</h3>
+                    <p>Demuestra tu dominio técnico presentando los resultados y entregables de la guía.</p>
+                </div>
+                <div class="status-indicator" id="status-6" style="color: white;"><i class="fas fa-lock"></i> Pendiente</div>
+            </div>
+
+            <!-- Módulo 7 -->
+            <div class="module-card" id="card-7" onclick="app.openModule(7)">
+                <div class="card-number-bg">07</div>
+                <div class="card-content">
+                    <div class="card-icon"><i class="fas fa-book"></i></div>
+                    <h3>GLOSARIO</h3>
+                    <p>Consulta los términos clave y enriquece tu vocabulario científico y biotecnológico.</p>
+                </div>
+                <div class="status-indicator" id="status-7"><i class="fas fa-lock"></i> Pendiente</div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <p style="text-align: center; padding: 20px; color: var(--text-gray); margin-top: 2rem; background: var(--bg-card); box-shadow: 0 -2px 10px rgba(0,0,0,0.05);">© 2024 Tecnoacademia SENA - Biotecnología</p>
+    </footer>
+
+    <script>
+        const app = {
+            state: { studentName: "", studentId: "", progress: 0, level: "Novato", unlockedModules: [0, 1, 2, 3, 4, 5, 6, 7], completedModules: [] },
+            init: function() {
+                const savedState = localStorage.getItem('vexIqState');
+                if (savedState) { 
+                    this.state = JSON.parse(savedState); 
+                    // Forzar que todos los módulos estén desbloqueados según lo requerido
+                    this.state.unlockedModules = [0, 1, 2, 3, 4, 5, 6, 7]; 
+                    this.updateUI(); 
+                    document.getElementById('loginModal').style.display = 'none'; 
+                }
+                else { document.getElementById('loginModal').style.display = 'flex'; }
+            },
+            login: function() {
+                const name = document.getElementById('studentName').value;
+                const id = document.getElementById('studentId').value;
+                if(!name || !id) return alert("Completa los campos");
+                this.state.studentName = name; this.state.studentId = id;
+                this.saveLocal(); this.updateUI();
+                document.getElementById('loginModal').style.display = 'none';
+            },
+            logout: function() {
+                if(confirm("¿Cerrar sesión? Se borrará el progreso no guardado en archivo.")) { localStorage.removeItem('vexIqState'); location.reload(); }
+            },
+            saveLocal: function() { localStorage.setItem('vexIqState', JSON.stringify(this.state)); },
+            downloadProgress: function() {
+                const dataStr = JSON.stringify(this.state, null, 2);
+                const blob = new Blob([dataStr], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `progreso_${this.state.studentId}.json`;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            },
+            uploadProgress: function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const loaded = JSON.parse(e.target.result);
+                        if(loaded.studentName && loaded.unlockedModules) { app.state = loaded; app.saveLocal(); app.updateUI(); alert("¡Progreso cargado!"); }
+                    } catch(e) { alert("Archivo inválido"); }
+                };
+                reader.readAsText(file);
+            },
+            updateUI: function() {
+                document.getElementById('displayUserName').textContent = this.state.studentName || "Invitado";
+                document.getElementById('displayUserId').textContent = "ID: " + (this.state.studentId || "---");
+                
+                // Módulos del 0 al 7 = 8 Módulos
+                const total = 8; 
+                const percent = Math.round((this.state.completedModules.length / total) * 100);
+                document.getElementById('globalProgress').style.width = percent + '%';
+                
+                let lvl = "Novato";
+                if(percent > 15) lvl = "Cadete"; if(percent > 40) lvl = "Piloto"; if(percent > 70) lvl = "Ingeniero"; if(percent == 100) lvl = "Maestro";
+                document.getElementById('levelBadge').textContent = lvl;
+
+                for(let i=0; i<total; i++) {
+                    const card = document.getElementById(`card-${i}`);
+                    const status = document.getElementById(`status-${i}`);
+                    if(!card) continue;
+                    card.classList.remove('locked');
+                    if(this.state.completedModules.includes(i)) {
+                        status.className = 'status-indicator completed'; status.innerHTML = '<i class="fas fa-check-circle"></i> Completado';
+                        if(i === 6) status.style.color = 'white'; 
+                    } else if(this.state.unlockedModules.includes(i)) {
+                        status.className = 'status-indicator active'; status.innerHTML = '<i class="fas fa-play-circle"></i> Disponible';
+                        if(i === 6) status.style.color = '#ffcc00'; 
+                    } else {
+                        card.classList.add('locked'); status.className = 'status-indicator locked'; status.innerHTML = '<i class="fas fa-lock"></i> Bloqueado';
+                        if(i === 6) status.style.color = 'rgba(255,255,255,0.6)';
+                    }
+                }
+            },
+            openModule: function(id) {
+                if(!this.state.unlockedModules.includes(id)) return alert("¡Módulo Bloqueado!");
+                window.location.href = `modulo${id}.html`;
+            }
+        };
+        document.addEventListener('DOMContentLoaded', () => app.init());
+    </script>
+</body>
+</html>

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 1: Protocolos de Seguridad</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --sena-green: #39A900;
+            --sena-blue: #00324D;
+            --sena-orange: #FF6C00;
+            --bg-body: #F4F6F9;
+            --bg-card: #FFFFFF;
+            --text-gray: #59667a;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --menu-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--sena-blue);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .back-btn {
+            text-decoration: none;
+            color: var(--sena-blue);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.3s;
+        }
+
+        .back-btn:hover {
+            color: var(--sena-orange);
+        }
+
+        .main-layout {
+            display: flex;
+            flex: 1;
+            max-width: 1400px;
+            margin: 2rem auto;
+            gap: 2rem;
+            width: 100%;
+            padding: 0 20px;
+        }
+
+        .sidebar {
+            width: var(--menu-width);
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .sidebar h3 {
+            font-family: 'Montserrat';
+            color: var(--sena-green);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .menu-item:hover,
+        .menu-item.active {
+            background: #f0fdf4;
+            color: var(--sena-green);
+        }
+
+        .menu-item.active {
+            background: var(--sena-green);
+            color: white;
+            box-shadow: 0 4px 10px rgba(57, 169, 0, 0.3);
+        }
+
+        .content-area {
+            flex: 1;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            min-height: 600px;
+        }
+
+        .protocol-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .protocol-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            font-family: 'Montserrat';
+            color: var(--sena-blue);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 2rem;
+        }
+
+        .image-card {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .image-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .image-card p {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .watermark-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius);
+            padding: 10px;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.2;
+            width: 80%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .relative-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--sena-blue);
+            color: white;
+        }
+
+        /* QUIZ */
+        .quiz-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .quiz-question {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 1rem;
+        }
+
+        .quiz-options label {
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .quiz-options label:hover {
+            background: #e9ecef;
+        }
+
+        .finish-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--sena-green);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .finish-btn:hover {
+            background: #2e8b00;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .main-layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="imagenes/sena.png" style="height: 50px;" alt="Logo SENA">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Centro de Comando</a>
+        </div>
+        <img src="imagenes/tecnoacademia.jpeg" style="height: 50px;" alt="Logo Tecnoacademia">
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <h3><i class="fas fa-shield-alt"></i> Protocolos</h3>
+            <div class="menu-item active" onclick="showSection(1)">1. General</div>
+            <div class="menu-item" onclick="showSection(2)">2. Eléctrico</div>
+            <div class="menu-item" onclick="showSection(3)">3. Robótica</div>
+            <div class="menu-item" onclick="showSection(4)">4. Bioseguridad</div>
+            <div class="menu-item" onclick="showSection(5)">5. EPP y Ergonomía</div>
+            <div class="menu-item" onclick="showSection(6)">6. Primeros Auxilios</div>
+            <div class="menu-item" onclick="showSection(7)">7. Evacuación</div>
+            <div class="menu-item" onclick="showSection(8)" style="color:var(--sena-orange); font-weight:bold;"><i class="fas fa-check-double"></i> Evaluación</div>
+        </aside>
+
+        <main class="content-area">
+
+            <!-- SECCIÓN 1: Protocolo General -->
+            <div id="sec-1" class="protocol-section active">
+                <h2 class="section-title">1. Protocolo General</h2>
+                <ul>
+                    <li>Seguir instrucciones del facilitador en todo momento.</li>
+                    <li>Prohibido comer o beber dentro del laboratorio.</li>
+                    <li>No correr ni jugar dentro del ambiente de formación.</li>
+                    <li>Cuidar el mobiliario y herramientas asignadas.</li>
+                    <li>Prohibido usar teléfonos móviles a no ser que el facilitador lo indique.</li>
+                </ul>
+                <div class="image-grid">
+                    <div class="image-card">
+                        <img src="C:\Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología\Guia_1\imagenes\Pictogramas priorizados\PR Prohibicion\P - 3 Prohibido comer.jpg" alt="Prohibido comer">
+                        <p>No alimentos</p>
+                    </div>
+                    <div class="image-card">
+                        <img src="C:\Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología\Guia_1\imagenes\Pictogramas priorizados\PR Prohibicion\PR - 886 Prohibido usar telefonos moviles.jpg" alt="Prohibido usar celulares">
+                        <p>No celulares</p>
+                    </div>
+                    <div class="image-card">
+                        <img src="C:\Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología\Guia_1\imagenes\Pictogramas priorizados\PR Prohibicion\PR - 10 Prohibido fumar.jpg" alt="Prohibido fumar">
+                        <p>No fumar</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: Seguridad Eléctrica -->
+            <div id="sec-2" class="protocol-section">
+                <h2 class="section-title">2. Seguridad Eléctrica</h2>
+                <ul>
+                    <li>No manipular conexiones con manos húmedas.</li>
+                    <li>Nunca conectar un circuito sin revisión previa.</li>
+                    <li>Si observas humo, desconecta y reporta inmediatamente.</li>
+                    <li>No puentear terminales de baterías directamente.</li>
+                    <li>Realiza siempre los montajes descritos en las guías, no improvises.</li>
+                    <li>Usa solo las fuentes de energía proporcionadas.</li>
+                    <li>Apaga y desconecta lo que no estés usando.</li>
+                    <li><strong>Equipos bajo supervisión:</strong> Baterías, Cautín, Estación de Soldadura, taladros, fuente DC.</li>
+                    <li>Eres responsable de los materiales por daños o pérdida.</li>
+                </ul>
+                <h3>Uso de Herramientas:</h3>
+                <ul>
+                    <li><strong>Cautín:</strong> Usar soporte, área ventilada. Cuidado con quemaduras.</li>
+                    <li><strong>Multímetro:</strong> Verificar escala. Negro en COM, Rojo en V/Ω.</li>
+                </ul>
+                <div class="image-grid">
+                    <div class="image-card"><img src="imagenes/Riesgo electrico.jpg" alt="Riesgo Eléctrico"><p>Riesgo Eléctrico</p></div>
+                    <div class="image-card"><img src="imagenes/Atención, alta temperatura.jpg" alt="Alta Temperatura"><p>Alta Temperatura</p></div>
+                    <div class="image-card"><img src="imagenes/Atención, elementos afilados.jpg" alt="Elementos Afilados"><p>Elementos Afilados</p></div>
+                    <div class="image-card"><img src="imagenes/prohibido trabajo en caliente.jpg" alt="Prohibido trabajo en caliente"><p>Trabajo en caliente</p></div>
+                    <div class="image-card"><img src="imagenes/Apagar cuando no se use.jpg" alt="Apagar equipos"><p>Apagar al terminar</p></div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3: Robótica y Mecánica -->
+            <div id="sec-3" class="protocol-section">
+                <h2 class="section-title">3. Robótica y Mecánica</h2>
+                <ul>
+                    <li>No forzar motores manualmente para hacerlos girar.</li>
+                    <li>Recibir y entregar los kits de piezas completos y ordenados.</li>
+                    <li>Pruebas de robots solo en pistas designadas.</li>
+                    <li>Cuidado con piezas pequeñas (riesgo de asfixia).</li>
+                    <li><strong>Software:</strong> No instalar programas sin permiso.</li>
+                    <li><strong>Residuos:</strong> Usar contenedores RAEE para electrónica.</li>
+                    <li>Prohibido uso de celulares durante explicaciones o prácticas riesgosas.</li>
+                </ul>
+            </div>
+
+            <!-- SECCIÓN 4: Bioseguridad en Laboratorios -->
+            <div id="sec-4" class="protocol-section watermark-container">
+                <img src="C:\Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología\Guia_1\imagenes\Titulos_Mesa de trabajo 1 copia.png" class="watermark" alt="Marca de agua">
+                <div class="relative-content">
+                    <h2 class="section-title">4. Bioseguridad en Laboratorios</h2>
+                    <p><strong>Definición:</strong> Normas para proteger la vida y el ambiente frente a riesgos químicos, biológicos y físicos.</p>
+                    <div style="display: flex; gap: 20px; align-items: flex-start; margin-top: 15px;">
+                        <div style="flex: 2;">
+                            <p><strong>Vestimenta:</strong> Uso obligatorio de Bata, Cabello recogido, Calzado cerrado (no sandalias). EPP adicional para tóxicos.</p>
+                            <p><strong>Comportamiento:</strong> Orden y limpieza. Mantener salidas libres. Nunca pipetear con la boca. No ingerir alimentos.</p>
+                            <p><strong>Infraestructura:</strong> Suelo seco. No manipular electricidad con manos mojadas. Cerrar gas y agua.</p>
+                        </div>
+                        <img src="C:\Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología\Guia_1\imagenes\TECNOBOT QUIMICA.jpeg" style="flex: 1; max-width: 200px; border-radius: 10px;" alt="Robot Química">
+                    </div>
+
+                    <h3 style="margin-top:20px;">Clasificación de Riesgos:</h3>
+                    <ul>
+                        <li><strong>Humanos</strong></li>
+                        <li><strong>Químicos:</strong> Inhalación, Ingestión, Dérmico.</li>
+                        <li><strong>Biológicos:</strong> Bacterias, virus.</li>
+                        <li><strong>Físicos:</strong> Mecánicos, Térmicos, Radiaciones.</li>
+                    </ul>
+
+                    <h3>Niveles de Bioseguridad:</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nivel</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>BSL-1</td><td>Microorganismos que no causan enfermedad en adultos sanos.</td></tr>
+                            <tr><td>BSL-2</td><td>Riesgo moderado para humanos y ambiente.</td></tr>
+                            <tr><td>BSL-3</td><td>Agentes exóticos con potencial de transmisión respiratoria.</td></tr>
+                            <tr><td>BSL-4</td><td>Agentes peligrosos con alto riesgo de enfermedad mortal.</td></tr>
+                        </tbody>
+                    </table>
+                    
+                    <div style="text-align:center; margin-top:20px;">
+                        <p><strong>Pictogramas de Riesgo Químico:</strong></p>
+                        <img src="C:\Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología\Guia_1\imagenes\Pictogramas-ar-1024x705.jpg" style="max-width: 100%; border-radius: 8px;" alt="Pictogramas de riesgo">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 5: EPP y Ergonomía -->
+            <div id="sec-5" class="protocol-section">
+                <h2 class="section-title">5. EPP y Ergonomía</h2>
+                <h3>Ergonomía:</h3>
+                <ul>
+                    <li><strong>Postura:</strong> Espalda recta, hombros relajados, pies en el suelo.</li>
+                    <li><strong>Descansos Activos:</strong> Estirar cada 30-45 min.</li>
+                    <li><strong>Iluminación:</strong> Evitar reflejos.</li>
+                </ul>
+                <h3>Barreras de Protección:</h3>
+                <ul>
+                    <li><strong>Primarias (EPP):</strong> Guantes, Mascarillas, Gafas, Batas.</li>
+                    <li><strong>Secundarias (Instalaciones):</strong> Duchas emergencia, Lavaojos, Extintores, Botiquín.</li>
+                </ul>
+            </div>
+
+            <!-- SECCIÓN 6: Primeros Auxilios -->
+            <div id="sec-6" class="protocol-section">
+                <h2 class="section-title">6. Primeros Auxilios</h2>
+                <ul>
+                    <li><strong>Heridas/Cortes:</strong> Lavar con agua, detener sangrado, desinfectar, cubrir.</li>
+                    <li><strong>Quemaduras:</strong> Enfriar con agua (10-15 min), no romper ampollas, cubrir sin aprear.</li>
+                    <li><strong>Descargas Eléctricas:</strong> Cortar corriente, llamar emergencias, RCP si no respira.</li>
+                    <li><strong>Desmayos:</strong> Acostar boca arriba, elevar piernas, aflojar ropa.</li>
+                </ul>
+            </div>
+
+            <!-- SECCIÓN 7: Evacuación -->
+            <div id="sec-7" class="protocol-section">
+                <h2 class="section-title">7. Evacuación</h2>
+                <ul>
+                    <li>Detén actividades y apaga equipos.</li>
+                    <li>Evacúa siguiendo señalización Verde.</li>
+                    <li>No corras, camina en fila, no te devuelvas.</li>
+                    <li>Ayuda a compañeros. Sigue al coordinador.</li>
+                </ul>
+            </div>
+
+            <!-- SECCIÓN 8: EVALUACIÓN -->
+            <div id="sec-8" class="protocol-section">
+                <h2 class="section-title">Evaluación de Seguridad</h2>
+                <p>Responde correctamente para desbloquear el siguiente módulo (Mínimo 3 aciertos).</p>
+
+                <div class="quiz-container" id="quiz-form">
+                    <!-- Pregunta 1 -->
+                    <div class="quiz-question">
+                        <p><strong>1. ¿Cuál es la acción correcta si observa humo en un circuito?</strong></p>
+                        <div class="quiz-options">
+                            <label><input type="radio" name="q1" id="q1a"> Echarle agua inmediatamente.</label>
+                            <label><input type="radio" name="q1" id="q1b"> Desconectar y reportar inmediatamente.</label>
+                            <label><input type="radio" name="q1" id="q1c"> Esperar a que el facilitador se dé cuenta.</label>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 2 -->
+                    <div class="quiz-question">
+                        <p><strong>2. ¿Qué calzado es obligatorio para ingresar al laboratorio?</strong></p>
+                        <div class="quiz-options">
+                            <label><input type="radio" name="q2" id="q2a"> Sandalias cómodas.</label>
+                            <label><input type="radio" name="q2" id="q2b"> Calzado cerrado.</label>
+                            <label><input type="radio" name="q2" id="q2c"> Cualquier tipo de calzado.</label>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 3 -->
+                    <div class="quiz-question">
+                        <p><strong>3. En ergonomía, ¿cada cuánto se recomienda realizar descansos activos?</strong></p>
+                        <div class="quiz-options">
+                            <label><input type="radio" name="q3" id="q3a"> Cada 30-45 minutos.</label>
+                            <label><input type="radio" name="q3" id="q3b"> Solo al final de la jornada.</label>
+                            <label><input type="radio" name="q3" id="q3c"> Cada 3 horas.</label>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 4 -->
+                    <div class="quiz-question">
+                        <p><strong>4. ¿Qué debe hacerse ante una quemadura?</strong></p>
+                        <div class="quiz-options">
+                            <label><input type="radio" name="q4" id="q4a"> Romper las ampollas.</label>
+                            <label><input type="radio" name="q4" id="q4b"> Aplicar cremas calientes.</label>
+                            <label><input type="radio" name="q4" id="q4c"> Enfriar con agua (10-15 min).</label>
+                        </div>
+                    </div>
+
+                    <!-- Pregunta 5 -->
+                    <div class="quiz-question">
+                        <p><strong>5. ¿Cómo debe ser la evacuación en caso de emergencia?</strong></p>
+                        <div class="quiz-options">
+                            <label><input type="radio" name="q5" id="q5a"> Correr rápidamente hacia la salida.</label>
+                            <label><input type="radio" name="q5" id="q5b"> Seguir la señalización verde, caminando en fila.</label>
+                            <label><input type="radio" name="q5" id="q5c"> Volver por los objetos personales.</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="checkQuiz()" style="margin-top:20px; padding:10px 20px; background:var(--sena-blue); color:white; border:none; border-radius:5px; cursor:pointer;">Validar Respuestas</button>
+
+                <button id="btn-finish" class="finish-btn" onclick="finishModule()">
+                    <i class="fas fa-medal"></i> Misión Cumplida - Volver al Inicio
+                </button>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        function showSection(id) {
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.menu-item')[id - 1].classList.add('active');
+            document.querySelectorAll('.protocol-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('sec-' + id).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function checkQuiz() {
+            let score = 0;
+            if (document.getElementById('q1b').checked) score++;
+            if (document.getElementById('q2b').checked) score++;
+            if (document.getElementById('q3a').checked) score++;
+            if (document.getElementById('q4c').checked) score++;
+            if (document.getElementById('q5b').checked) score++;
+
+            if (score >= 3) {
+                alert("¡Felicidades! Has aprobado con " + score + " de 5 respuestas correctas.");
+                document.getElementById('btn-finish').style.display = 'block';
+                document.getElementById('btn-finish').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert("Has obtenido " + score + " puntos. Necesitas al menos 3 para aprobar. Por favor, revisa el contenido e intenta de nuevo.");
+            }
+        }
+
+        function finishModule() {
+            const savedState = localStorage.getItem('vexIqState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                if (!state.completedModules.includes(1)) state.completedModules.push(1);
+                if (!state.unlockedModules.includes(2)) state.unlockedModules.push(2); 
+                localStorage.setItem('vexIqState', JSON.stringify(state));
+                alert("¡Protocolos Asimilados! Módulo 2 Desbloqueado.");
+                window.location.href = 'index.html';
+            } else {
+                // Estado inicial si no existe
+                const newState = { completedModules: [1], unlockedModules: [1, 2] };
+                localStorage.setItem('vexIqState', JSON.stringify(newState));
+                alert("¡Protocolos Asimilados! Módulo 2 Desbloqueado.");
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 2: REFLEXIÓN INICIAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ESTILOS GLOBALES ESTANDARIZADOS */
+        :root { --sena-green: #39A900; --sena-blue: #00324D; --sena-orange: #FF6C00; --bg-body: #F4F6F9; --bg-card: #FFFFFF; --text-gray: #59667a; --shadow: 0 4px 20px rgba(0,0,0,0.05); --radius: 12px; --menu-width: 280px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--sena-blue); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; position: relative;}
+        
+        /* FONDO / MARCA DE AGUA (NO MUY TRANSPARENTE) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/imagenes/academia_Makers_exterior_2.png");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.75; /* Abarca toda la página, no muy transparente */
+            z-index: -1;
+        }
+
+        /* HEADER */
+        header { background-color: var(--bg-card); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 100; }
+        .back-btn { text-decoration: none; color: var(--sena-blue); font-weight: bold; display: flex; align-items: center; gap: 10px; transition: color 0.3s; }
+        .back-btn:hover { color: var(--sena-orange); }
+
+        /* LAYOUT */
+        .main-layout { display: flex; flex: 1; max-width: 1400px; margin: 2rem auto; gap: 2rem; width: 100%; padding: 0 20px; }
+        .sidebar { width: var(--menu-width); background: rgba(255,255,255,0.95); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; height: fit-content; position: sticky; top: 2rem; }
+        .sidebar h3 { font-family: 'Montserrat'; color: var(--sena-green); margin-bottom: 1.5rem; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; transition: all 0.3s; color: var(--text-gray); font-weight: 500; position: relative; }
+        .menu-item:hover { background: #f0fdf4; color: var(--sena-green); }
+        .menu-item.active { background: var(--sena-green); color: white; box-shadow: 0 4px 10px rgba(57, 169, 0, 0.3); }
+        .menu-item.completed::after { content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900; position: absolute; right: 15px; color: var(--sena-green); }
+        .menu-item.active.completed::after { color: white; }
+
+        /* CONTENIDO */
+        .content-area { flex: 1; background: rgba(255,255,255,0.95); border-radius: var(--radius); box-shadow: var(--shadow); padding: 2.5rem; min-height: 600px; }
+        .activity-section { display: none; animation: fadeIn 0.5s ease; }
+        .activity-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .section-header h2 { font-family: 'Montserrat'; color: var(--sena-blue); font-size: 1.8rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        /* COMPONENTES DE INTERACCIÓN (VIDEO, FORMS, ETC) */
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: var(--radius); background: black; margin-bottom: 1.5rem; box-shadow: var(--shadow); }
+        .video-container iframe, .video-container video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.8rem; font-weight: bold; color: var(--sena-blue); font-size: 1.05rem; line-height: 1.4; }
+        .form-group textarea, input { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 8px; font-family: inherit; font-size: 1rem; transition: border-color 0.3s; background: #fff; }
+        .form-group textarea:focus { outline: none; border-color: var(--sena-green); }
+        
+        .btn-primary { background: var(--sena-orange); color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.3s; display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; }
+        .btn-primary:hover { background: #e65100; }
+
+        /* ESTILOS ESPECÍFICOS PARA ACTIVIDADES INTERACTIVAS */
+        /* Match Game / Apareamiento */
+        .match-container { display: flex; gap: 20px; justify-content: space-between; }
+        .match-col { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .match-card { padding: 15px; border: 2px solid #eee; border-radius: 8px; cursor: pointer; transition: all 0.2s; text-align: center; }
+        .match-card:hover { border-color: var(--sena-blue); background: #f0f8ff; }
+        .match-card.selected { border-color: var(--sena-orange); background: #fff3e0; }
+        .match-card.matched { border-color: var(--sena-green); background: #e8f5e9; pointer-events: none; opacity: 0.7; }
+        .match-card img { max-width: 100px; max-height: 100px; display: block; margin: 0 auto 5px; }
+
+        /* Quiz */
+        .quiz-option { background: #f9f9f9; padding: 10px; margin: 5px 0; border-radius: 5px; cursor: pointer; border: 1px solid #eee; }
+        .quiz-option:hover { background: #e0f7fa; }
+        .quiz-option.correct { background: #c8e6c9; border-color: #4caf50; }
+        .quiz-option.incorrect { background: #ffcdd2; border-color: #f44336; }
+
+        /* Flashcards */
+        .flashcard { perspective: 1000px; width: 100%; height: 200px; cursor: pointer; margin-bottom: 15px; }
+        .flashcard-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+        .flashcard-front, .flashcard-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 20px; font-weight: bold; font-size: 1.2rem; }
+        .flashcard-front { background-color: #fff; color: var(--sena-blue); border: 2px solid var(--sena-blue); }
+        .flashcard-back { background-color: var(--sena-blue); color: white; transform: rotateY(180deg); }
+
+        /* AREA FINAL */
+        .finish-area { margin-top: 2rem; text-align: center; padding: 2rem; background: #e8f5e9; border: 2px dashed var(--sena-green); border-radius: var(--radius); display: none; }
+
+        @media (max-width: 768px) { .main-layout { flex-direction: column; } .sidebar { width: 100%; position: static; } .match-container { flex-direction: column; } }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-left">
+            <img src="imagenes/sena.png" style="height: 50px;">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Centro de Comando</a>
+        </div>
+        <img src="imagenes/tecnoacademia.jpeg" style="height: 50px;">
+    </header>
+
+    <div class="main-layout">
+        <!-- SIDEBAR GENERADA DINÁMICAMENTE -->
+        <aside class="sidebar">
+            <h3><i class="fas fa-list-ul"></i> Actividades</h3>
+            
+            <div id="menu-1" class="menu-item active" onclick="showSection(1)">
+                <i class="fas fa-lightbulb"></i> 1. Reflexión Inicial
+            </div>
+            
+            <div id="menu-final" class="finish-area" style="padding: 10px; margin-top: 20px; display: none;">
+                <p style="font-size:0.9rem; color:var(--sena-green); font-weight:bold;"><i class="fas fa-star" style="color: gold;"></i> ¡Módulo Completado!</p>
+                <button class="btn-primary" style="width:100%; justify-content:center; font-size:0.8rem; margin-top: 10px;" onclick="finishModule()">
+                    Avanzar Siguiente Nivel
+                </button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            
+            <section id="sec-1" class="activity-section active">
+                <div class="section-header">
+                    <h2>Módulo 2: REFLEXIÓN INICIAL</h2>
+                </div>
+
+                <div style="background: #e3f2fd; border-left: 4px solid var(--sena-blue); padding: 15px 20px; border-radius: 4px; margin-bottom: 25px;">
+                    <p style="margin-bottom: 8px;"><strong><i class="fas fa-clock"></i> Tiempo Estimado Total:</strong> 1 Hora</p>
+                    <p style="text-align: justify; color: var(--sena-blue); font-size: 1.05rem;">
+                        Sigue las instrucciones de tu facilitador y participa de una forma activa. Observa el video denominado <strong>¿Qué tiene de especial la Ciencia?</strong> y responde de forma individual las preguntas propuestas y debate con tus compañeros.
+                    </p>
+                </div>
+
+                <!-- VIDEO PLAYER -->
+                <div class="video-container">
+                    <video controls>
+                        <source src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_3/videos/¿Qué tiene de especial la ciencia_.mp4" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                </div>
+
+                <!-- FORMULARIO INTERACTIVO -->
+                <div style="background: #fdfdfd; padding: 30px; border-radius: var(--radius); border: 1px solid #e0e0e0; margin-top: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.02);">
+                    <h3 style="color: var(--sena-green); margin-bottom: 20px; border-bottom: 2px dashed #eee; padding-bottom: 10px;">
+                        <i class="fas fa-edit"></i> Panel de Reflexión
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label>1. ¿Consideras que para ser investigador o científico es necesario tener un súper don o un súper poder?</label>
+                        <textarea id="respuesta1" rows="4" placeholder="Analiza y redacta tu respuesta aquí detalladamente..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>2. ¿A qué se refiere cada uno de estos términos: Escepticismo, apertura y curiosidad? Describe cada uno según tu criterio.</label>
+                        <textarea id="respuesta2" rows="5" placeholder="Escribe tu descripción para cada término..."></textarea>
+                    </div>
+
+                    <div style="text-align: right; margin-top: 20px;">
+                        <button class="btn-primary" id="btnSaveReflection" onclick="saveReflection()">
+                            <i class="fas fa-cloud-upload-alt"></i> Guardar Mis Respuestas
+                        </button>
+                    </div>
+
+                    <div id="successMessage" style="margin-top: 20px; padding: 15px; background: #e8f5e9; color: var(--sena-green); font-weight: bold; border-radius: 8px; border: 1px solid #c8e6c9; display: none; text-align: center;">
+                        <i class="fas fa-check-circle fa-2x" style="margin-bottom: 10px;"></i><br>
+                        ¡Respuestas guardadas exitosamente en la bitácora! Has completado el módulo.
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // LÓGICA BASE OBLIGATORIA
+        let progress = [false]; // 1 sola actividad (Formulario)
+        let totalActivities = 1; 
+
+        function showSection(id) {
+            document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+            document.getElementById('menu-' + id).classList.add('active');
+            document.querySelectorAll('.activity-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById('sec-' + id).classList.add('active');
+        }
+
+        function markComplete(id) {
+            if (!progress[id-1]) {
+                progress[id-1] = true;
+                document.getElementById('menu-' + id).classList.add('completed');
+                checkAllComplete();
+            }
+        }
+
+        function checkAllComplete() {
+            if (progress.every(Boolean)) {
+                document.getElementById('menu-final').style.display = 'block';
+                // También mostrar el área de finalización dentro del contenido si se desea
+                if(document.getElementById('final-msg-area')) document.getElementById('final-msg-area').style.display = 'block';
+            }
+        }
+
+        function finishModule() {
+            const currentModule = 2; // Número correspondiente al Módulo 2
+            const nextModule = currentModule + 1;
+            
+            const savedState = localStorage.getItem('vexIqState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                if (!state.completedModules.includes(currentModule)) state.completedModules.push(currentModule);
+                if (!state.unlockedModules.includes(nextModule)) state.unlockedModules.push(nextModule);
+                localStorage.setItem('vexIqState', JSON.stringify(state));
+                alert("¡Módulo Finalizado! Progreso Guardado.");
+                window.location.href = 'index.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // --- FUNCIONES ESPECÍFICAS PARA LA ACTIVIDAD ---
+        
+        function saveReflection() {
+            const r1 = document.getElementById('respuesta1').value.trim();
+            const r2 = document.getElementById('respuesta2').value.trim();
+
+            if (r1.length < 10 || r2.length < 10) {
+                alert("Por favor, elabora un poco más tus respuestas en ambas preguntas antes de guardar.");
+                return;
+            }
+
+            // Cambiar aspecto visual del botón para simular carga
+            const btn = document.getElementById('btnSaveReflection');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+            btn.style.backgroundColor = "var(--sena-green)";
+
+            setTimeout(() => {
+                // Bloquear textareas
+                document.getElementById('respuesta1').disabled = true;
+                document.getElementById('respuesta2').disabled = true;
+                
+                // Ocultar botón y mostrar mensaje
+                btn.style.display = "none";
+                document.getElementById('successMessage').style.display = 'block';
+                
+                // Marcar actividad completada
+                markComplete(1);
+            }, 800); // Simulamos un breve tiempo de guardado
+        }
+    </script>
+</body>
+</html>

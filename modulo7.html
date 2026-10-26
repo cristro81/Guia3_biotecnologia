@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 7: Glosario Técnico</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ESTILOS GLOBALES */
+        :root { --sena-green: #39A900; --sena-blue: #00324D; --sena-orange: #FF6C00; --bg-body: #F4F6F9; --bg-card: #FFFFFF; --text-gray: #59667a; --shadow: 0 4px 20px rgba(0,0,0,0.05); --radius: 12px; --menu-width: 280px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; background-color: var(--bg-body); color: var(--sena-blue); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
+        
+        /* FONDO / MARCA DE AGUA */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/Fondo_laboratorio.png");
+            background-size: cover;
+            background-position: center;
+            opacity: 0.65;
+            z-index: -1;
+        }
+
+        /* HEADER */
+        header { background-color: var(--bg-card); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 100; }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .back-btn { text-decoration: none; color: var(--sena-blue); font-weight: bold; display: flex; align-items: center; gap: 10px; transition: color 0.3s; }
+        .back-btn:hover { color: var(--sena-orange); }
+
+        /* LAYOUT */
+        .main-layout { display: flex; flex: 1; max-width: 1400px; margin: 2rem auto; gap: 2rem; width: 100%; padding: 0 20px; }
+        .sidebar { width: var(--menu-width); background: rgba(255, 255, 255, 0.95); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; height: fit-content; position: sticky; top: 2rem; }
+        .sidebar h3 { font-family: 'Montserrat'; color: var(--sena-green); margin-bottom: 1.5rem; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 15px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; transition: all 0.3s; color: var(--text-gray); font-weight: 500; }
+        .menu-item.active { background: var(--sena-green); color: white; box-shadow: 0 4px 10px rgba(57, 169, 0, 0.3); }
+
+        /* CONTENIDO GLOSARIO */
+        .content-area { flex: 1; background: rgba(255, 255, 255, 0.95); border-radius: var(--radius); box-shadow: var(--shadow); padding: 2.5rem; min-height: 600px; }
+        
+        .section-header h2 { font-family: 'Montserrat'; color: var(--sena-blue); font-size: 1.8rem; margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        /* BUSCADOR */
+        .search-box { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: var(--radius); font-size: 1rem; margin-bottom: 2rem; transition: border-color 0.3s; background: #f9f9f9 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="%23999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>') no-repeat 98% center; }
+        .search-box:focus { border-color: var(--sena-green); outline: none; background-color: #fff; }
+
+        /* ACORDEÓN DE TÉRMINOS */
+        .glossary-list { display: flex; flex-direction: column; gap: 15px; }
+        
+        .glossary-item { border: 1px solid #eee; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; background: white; }
+        .glossary-item:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); border-color: var(--sena-blue); }
+        
+        .glossary-term { background: #f8f9fa; padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--sena-blue); font-family: 'Montserrat'; font-size: 1.1rem; }
+        .glossary-term:hover { background: #e3f2fd; }
+        .glossary-term i { transition: transform 0.3s; color: var(--sena-green); }
+        
+        .glossary-def { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; background: white; padding: 0 20px; border-top: 1px solid transparent; }
+        
+        /* ESTADO ACTIVO */
+        .glossary-item.active { border-color: var(--sena-green); }
+        .glossary-item.active .glossary-term { background: var(--sena-green); color: white; }
+        .glossary-item.active .glossary-term i { transform: rotate(180deg); color: white; }
+        .glossary-item.active .glossary-def { max-height: 500px; padding: 20px; border-top-color: #eee; }
+
+        /* IMAGEN EN DEFINICIÓN */
+        .def-content { display: flex; gap: 20px; align-items: flex-start; }
+        .def-text { flex: 1; font-size: 1rem; color: #555; text-align: justify; }
+        .def-img { max-width: 200px; border-radius: 8px; border: 1px solid #ddd; padding: 5px; background: white; }
+
+        /* BOTÓN FINALIZAR */
+        .finish-area { margin-top: 2rem; padding: 20px; background: #e8f5e9; border-radius: var(--radius); text-align: center; border: 2px dashed var(--sena-green); display: block; }
+        .btn-primary { background: var(--sena-orange); color: white; border: none; padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: bold; transition: background 0.3s; font-size: 1rem; }
+        .btn-primary:hover { background: #e65100; }
+
+        @media (max-width: 768px) { .main-layout { flex-direction: column; } .sidebar { width: 100%; position: static; } .def-content { flex-direction: column; } .top-images-container { flex-direction: column; align-items: center; text-align: center;} }
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/SENA_T.png" alt="SENA" style="height: 50px;" onerror="this.src='https://placehold.co/100x50/FFFFFF/39A900?text=SENA'">
+            <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Centro de Comando</a>
+        </div>
+        <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/TECNO_V.jpeg" alt="Tecnoacademia" style="height: 50px;" onerror="this.src='https://placehold.co/150x50/FFFFFF/00324D?text=Tecnoacademia'">
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <h3><i class="fas fa-book"></i> Navegación</h3>
+            <div class="menu-item active"><i class="fas fa-list"></i> Lista de Términos</div>
+            
+            <div id="menu-final" class="finish-area">
+                <p style="margin-bottom:10px; color:var(--sena-green); font-weight:bold;"><i class="fas fa-trophy"></i> ¡Curso Completado!</p>
+                <button class="btn-primary" onclick="finishModule()">
+                    <i class="fas fa-medal"></i> Graduarse
+                </button>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            
+            <!-- CONTENEDOR DE IMÁGENES Y TÍTULO -->
+            <div class="top-images-container" style="display: flex; gap: 25px; align-items: flex-start; justify-content: space-between; margin-bottom: 2.5rem;">
+                <!-- Imagen Izquierda -->
+                <div style="flex-shrink: 0;">
+                    <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/TECNOBOT MEGAFONO.jpeg" alt="Tecnobot Megáfono" style="width: 140px; border-radius: 12px; box-shadow: var(--shadow);" onerror="this.src='https://placehold.co/140x140/F4F6F9/00324D?text=Tecnobot'">
+                </div>
+
+                <!-- Centro: Textos -->
+                <div class="section-header" style="flex: 1; text-align: center;">
+                    <h2><i class="fas fa-book-open"></i> Módulo 7: Glosario Técnico</h2>
+                    <p style="color: var(--text-gray); font-size: 1.05rem; margin-top: 15px;">
+                        Conceptos clave y definiciones técnicas para enriquecer tu vocabulario científico en el ámbito biotecnológico.
+                    </p>
+                </div>
+
+                <!-- Imágenes Derecha (Apiladas) -->
+                <div style="flex-shrink: 0; display: flex; flex-direction: column; gap: 15px;">
+                    <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/Dr. Patarroyo.png" alt="Dr. Patarroyo" style="width: 130px; border-radius: 12px; box-shadow: var(--shadow);" onerror="this.src='https://placehold.co/130x160/F4F6F9/00324D?text=Dr.+Patarroyo'">
+                    <img src="C:/Guias_Interactivas_Aplicaciones_Desarrollo_Biotecnología/Guia_1/imagenes/Dra. Rosalind.png" alt="Dra. Rosalind" style="width: 130px; border-radius: 12px; box-shadow: var(--shadow);" onerror="this.src='https://placehold.co/130x160/F4F6F9/39A900?text=Dra.+Rosalind'">
+                </div>
+            </div>
+
+            <!-- BUSCADOR -->
+            <input type="text" class="search-box" placeholder="Buscar término..." onkeyup="filterGlossary(this.value)">
+
+            <!-- LISTA DE GLOSARIO -->
+            <div class="glossary-list" id="glossary-list">
+                
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Absorbancia</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Capacidad de un material para absorber luz.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Bioadsorción</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Proceso que utiliza materiales biológicos para eliminar contaminantes del agua.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Biorremediación</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Proceso que utiliza microorganismos para eliminar contaminantes del medio ambiente.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Bioplásticos</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Plásticos que se producen a partir de materiales renovables y/o biodegradables.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Biotecnología</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Uso de organismos o sistemas biológicos.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Biotecnología ambiental</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Rama de la biotecnología que se enfoca en la utilización de organismos vivos o sus componentes para resolver problemas ambientales.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Contaminación</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Presencia en el medio ambiente de sustancias que pueden ser perjudiciales para la salud humana y el medio ambiente.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Cuprosis</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Enfermedad causada por la intoxicación crónica con cobre.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Espectrofotómetro</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Instrumento para medir la absorbancia de luz.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Espectroelectromagnético</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Rango de todas las ondas electromagnéticas.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Infografía</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Representación visual de información o datos.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Metales pesados</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Elementos químicos con una densidad relativamente alta y potencialmente tóxicos para los seres vivos.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Radiación</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Energía que se mueve a través de ondas.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term" onclick="toggleItem(this)">
+                        <span>Toxicidad</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="glossary-def">
+                        <div class="def-content">
+                            <div class="def-text">Capacidad de una sustancia química para causar daño a los seres vivos.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleItem(element) {
+            // Alternar el actual
+            element.parentElement.classList.toggle('active');
+        }
+
+        function filterGlossary(query) {
+            const filter = query.toUpperCase();
+            const items = document.querySelectorAll('.glossary-item');
+            
+            items.forEach(item => {
+                const text = item.querySelector('.glossary-term span').innerText;
+                const defText = item.querySelector('.def-text').innerText;
+                if (text.toUpperCase().indexOf(filter) > -1 || defText.toUpperCase().indexOf(filter) > -1) {
+                    item.style.display = "";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+
+        function finishModule() {
+            const savedState = localStorage.getItem('vexIqState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                // Marcar Módulo 7 completado
+                if (!state.completedModules.includes(7)) state.completedModules.push(7);
+                
+                localStorage.setItem('vexIqState', JSON.stringify(state));
+                alert("¡Felicidades! Has completado el Glosario y finalizado el curso.");
+                window.location.href = 'index.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+
+</body>
+
+</html>
